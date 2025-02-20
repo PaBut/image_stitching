@@ -1,0 +1,7 @@
+SIFT/datasets
+*.pth
+*.ckpt
+**/__pycache__/*
+*.png
+*.csv
+*.pyc

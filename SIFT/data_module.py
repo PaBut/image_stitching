@@ -80,6 +80,7 @@ class ISIQADataModule(DataModule):
         return img1, img2
     
     def get_n_random_pairs(self, n: int) -> list[tuple[Mat, Mat]]:
+        n = min(len(self.files), n)
         img_names = random.sample(self.files, n)
 
         return [(cv2.imread(img_name[0]),
