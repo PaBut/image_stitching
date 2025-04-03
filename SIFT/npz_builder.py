@@ -145,6 +145,11 @@ if __name__ == "__main__":
     print(f"Computed overlap coefficients for {len(overlap_results)} pairs")
 
     np.savez(f"{scene_name}.npz", image_paths=convert_dict_tondarray(image_names), depth_paths=convert_dict_tondarray(depthmaps),
-            poses=convert_dict_tondarray(poses), camera_intristics=convert_dict_tondarray(camera_intristics), pair_infos=overlap_results)
+            poses=convert_dict_tondarray(poses), camera_intristics=convert_dict_tondarray(camera_intristics),
+            pair_infos=np.array(overlap_results, dtype=np.dtype([
+                ('image_pair', 'i4', (2,)),  # Pair of int IDs
+                ('overlap', 'f4'),           # Overlap coefficient (float)
+                ('extra_data', 'O')          # List of floats (object type)
+            ])))
 
     print(f"Saved overlap coefficients to {scene_name}.npz")
