@@ -86,7 +86,7 @@ def load_points3D_txt(points3D_txt_path, available_images=None):
 def compute_overlap(image_points, image_names):
     """Computes overlap coefficient for each image pair"""
     image_ids = list(image_points.keys())
-    overlap_scores = {}
+    overlap_scores = []
 
     for i in range(len(image_ids)):
         for j in range(i + 1, len(image_ids)):
