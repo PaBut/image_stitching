@@ -8,9 +8,9 @@ DEPTHMAP_PATH = "depth_maps/"
 
 def load_images_txt(images_txt_path, camera_info, prefix=None):
     """Loads image poses and paths from COLMAP images.txt"""
-    image_paths = []
-    poses = []
-    camera_intristics = []
+    image_paths = {}
+    poses = {}
+    camera_intristics = {}
 
     with open(images_txt_path, 'r') as f:
         lines = f.readlines()
@@ -37,7 +37,7 @@ def construct_intrinsic_matrix(fx, fy, cx, cy):
 
 def load_camera_txt(camera_txt_path):
     """Loads camera intrinsics from COLMAP cameras.txt"""
-    camera_data = []
+    camera_data = {}
     with open(camera_txt_path, 'r') as f:
         lines = f.readlines()
         for line in lines[3:]:  # Skip first 3 header lines
@@ -64,7 +64,7 @@ def load_camera_txt(camera_txt_path):
 
 def load_points3D_txt(points3D_txt_path, available_images=None):
     """Loads 3D point observations from COLMAP points3D.txt"""
-    image_points = []
+    image_points = {}
     with open(points3D_txt_path, 'r') as f:
         lines = f.readlines()
         for line in lines[3:]:  # Skip first 3 header lines
@@ -85,7 +85,7 @@ def load_points3D_txt(points3D_txt_path, available_images=None):
 def compute_overlap(image_points, image_names):
     """Computes overlap coefficient for each image pair"""
     image_ids = list(image_points.keys())
-    overlap_scores = []
+    overlap_scores = {}
 
     for i in range(len(image_ids)):
         for j in range(i + 1, len(image_ids)):
