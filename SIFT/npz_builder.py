@@ -109,7 +109,7 @@ def convert_dict_tondarray(dict_data):
     max_index = max(dict_data.keys()) + 1  # Ensure space for the largest index
 
     # Create an empty array (or fill with a default value like -1)
-    array = np.full((max_index, len(next(iter(dict_data.values())))), None)  # Shape: (max_index, 3)
+    array = [None] * max_index  # Shape: (max_index, 3)
 
     # Fill the array using the dictionary keys as indices
     for key, value in dict_data.items():
