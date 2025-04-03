@@ -96,7 +96,7 @@ def compute_overlap(image_points, image_names):
             
             if min_points > 0:  # Avoid division by zero
                 overlap = shared_points / min_points
-                overlap_scores.append(((image_names[img1], image_names[img2]), overlap, []))
+                overlap_scores.append(((img1, img2), overlap, []))
 
     return overlap_scores
 
