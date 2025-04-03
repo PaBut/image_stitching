@@ -64,7 +64,7 @@ def load_camera_txt(camera_txt_path):
             else:
                 raise ValueError(f"Unsupported camera model: {model}")
             
-            camera_data[camera_id] = construct_intrinsic_matrix(fx, fy, cx, cy)
+            camera_data[camera_id] = (construct_intrinsic_matrix(fx, fy, cx, cy), int(parts[2]), int(parts[3]))  # K, width, height
     return camera_data
 
 # def load_points3D_txt(points3D_txt_path, available_images=None):
@@ -113,7 +113,7 @@ def angle_between_vectors(v1, v2):
 
 def compute_fov(intrinsics):
     """Compute horizontal and vertical FOV in degrees."""
-    fx, fy, width, height = intrinsics['fx'], intrinsics['fy'], intrinsics['width'], intrinsics['height']
+    fx, fy, width, height = intrinsics[0][0][0], intrinsics[0][1][1], intrinsics[1], intrinsics[2]
     fov_h = 2 * np.arctan(width / (2 * fx)) * 180 / np.pi
     fov_v = 2 * np.arctan(height / (2 * fy)) * 180 / np.pi
     return fov_h, fov_v
@@ -213,7 +213,7 @@ if __name__ == "__main__":
     print(f"Computed overlap coefficients for {len(overlap_results)} pairs")
 
     np.savez(f"{scene_name}.npz", image_paths=convert_dict_tondarray(image_names), depth_paths=convert_dict_tondarray(depthmaps),
-            poses=convert_dict_tondarray(poses), camera_intristics=convert_dict_tondarray(camera_intristics),
+            poses=convert_dict_tondarray(poses), camera_intristics=convert_dict_tondarray({key: value[0] for key, value in camera_intristics.items()}),
             pair_infos=np.array(overlap_results, dtype=np.dtype([
                 ('image_pair', 'i4', (2,)),  # Pair of int IDs
                 ('overlap', 'f4'),           # Overlap coefficient (float)
