@@ -1,3 +1,4 @@
+from collections import defaultdict
 import os
 import numpy as np
 from argparse import ArgumentParser
@@ -64,7 +65,7 @@ def load_camera_txt(camera_txt_path):
 
 def load_points3D_txt(points3D_txt_path, available_images=None):
     """Loads 3D point observations from COLMAP points3D.txt"""
-    image_points = {}
+    image_points = defaultdict(set)
     with open(points3D_txt_path, 'r') as f:
         lines = f.readlines()
         for line in lines[3:]:  # Skip first 3 header lines
