@@ -101,7 +101,7 @@ def compute_overlap(image_points):
             total_points = len(points1.union(points2))
             score = common_points / total_points if total_points > 0 else 0
             overlap_scores.append(((img1, img2), score, []))
-            
+
     return overlap_scores
 
 def get_depthmap_paths(image_paths):
@@ -147,7 +147,7 @@ if __name__ == "__main__":
     depthmaps = get_depthmap_paths(image_names)
     # image_points = load_points3D_txt(points3D_txt_path, [image for image
     #                                                     in image_names.keys() if image_names[image] != None])
-    overlap_results = compute_overlap(image_points, image_names)
+    overlap_results = compute_overlap(image_points)
     print(f"Computed overlap coefficients for {len(overlap_results)} pairs")
 
     np.savez(f"{scene_name}.npz", image_paths=convert_dict_tondarray(image_names), depth_paths=convert_dict_tondarray(depthmaps),
