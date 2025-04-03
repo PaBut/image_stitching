@@ -77,7 +77,7 @@ def load_points3D_txt(points3D_txt_path, available_images=None):
             
             for j in range(0, len(track), 2):
                 image_id = int(track[j])
-                if available_images[image_id] is not None:
+                if image_id in available_images:
                     image_points[image_id].add(point_id)
     
     return image_points
@@ -126,7 +126,7 @@ if __name__ == "__main__":
     cameras = load_camera_txt(camera_txt_path)
     image_names, poses, camera_intristics = load_images_txt(images_txt_path, cameras, prefix)
     depthmaps = get_depthmap_paths(image_names)
-    image_points = load_points3D_txt(points3D_txt_path, [image_names[image] for image
+    image_points = load_points3D_txt(points3D_txt_path, [image for image
                                                         in image_names.keys() if image_names[image] != None])
     overlap_results = compute_overlap(image_points, image_names)
 
