@@ -115,7 +115,7 @@ def convert_dict_tondarray(dict_data):
     for key, value in dict_data.items():
         array[key] = value
 
-    return array
+    return np.array(array, dtype=object)
 
 def parse_args():
     """Parse command line arguments"""
