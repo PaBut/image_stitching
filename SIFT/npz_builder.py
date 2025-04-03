@@ -105,6 +105,16 @@ def get_depthmap_paths(image_paths):
     depth_maps = map(lambda x: x.replace(IMAGE_PATH, DEPTHMAP_PATH), image_names.copy())
     return image_paths
 
+def convert_dict_tondarray(dict_data):
+    max_index = max(dict_data.keys()) + 1  # Ensure space for the largest index
+
+    # Create an empty array (or fill with a default value like -1)
+    array = np.full((max_index, len(next(iter(dict_data.values())))), None)  # Shape: (max_index, 3)
+
+    # Fill the array using the dictionary keys as indices
+    for key, value in dict_data.items():
+        array[key] = value
+
 def parse_args():
     """Parse command line arguments"""
     parser = ArgumentParser(description="Process COLMAP data")
@@ -134,7 +144,7 @@ if __name__ == "__main__":
     overlap_results = compute_overlap(image_points, image_names)
     print(f"Computed overlap coefficients for {len(overlap_results)} pairs")
 
-    np.savez(f"{scene_name}.npz", image_paths=image_names, depth_paths=depthmaps,
-            poses=poses, camera_intristics=camera_intristics, pair_infos=overlap_results)
+    np.savez(f"{scene_name}.npz", image_paths=convert_dict_tondarray(image_names), depth_paths=convert_dict_tondarray(depthmaps),
+            poses=convert_dict_tondarray(poses), camera_intristics=convert_dict_tondarray(camera_intristics), pair_infos=overlap_results)
 
     print(f"Saved overlap coefficients to {scene_name}.npz")
