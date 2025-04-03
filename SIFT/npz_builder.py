@@ -124,11 +124,14 @@ if __name__ == "__main__":
     prefix = args.image_prefix
 
     cameras = load_camera_txt(camera_txt_path)
+    print(f"Loaded {len(cameras)} cameras")
     image_names, poses, camera_intristics = load_images_txt(images_txt_path, cameras, prefix)
+    print(f"Loaded {len(image_names)} images")
     depthmaps = get_depthmap_paths(image_names)
     image_points = load_points3D_txt(points3D_txt_path, [image for image
                                                         in image_names.keys() if image_names[image] != None])
     overlap_results = compute_overlap(image_points, image_names)
+    print(f"Computed overlap coefficients for {len(overlap_results)} pairs")
 
     np.savez(f"{scene_name}.npz", image_paths=image_names, depth_paths=depthmaps,
             poses=poses, camera_intristics=camera_intristics, pair_infos=overlap_results)
