@@ -209,7 +209,7 @@ if __name__ == "__main__":
     depthmaps = get_depthmap_paths(image_names)
     # image_points = load_points3D_txt(points3D_txt_path, [image for image
     #                                                     in image_names.keys() if image_names[image] != None])
-    overlap_results = estimate_overlap(image_names, cameras, poses)
+    overlap_results = estimate_overlap(image_names, camera_intristics, poses)
     print(f"Computed overlap coefficients for {len(overlap_results)} pairs")
 
     np.savez(f"{scene_name}.npz", image_paths=convert_dict_tondarray(image_names), depth_paths=convert_dict_tondarray(depthmaps),
