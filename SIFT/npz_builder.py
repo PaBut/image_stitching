@@ -80,7 +80,7 @@ def load_points3D_txt(points3D_txt_path, available_images=None):
                 if image_id in available_images:
                     if image_id not in image_points:
                         image_points[image_id] = []
-                    image_points[image_id].add(point_id)
+                    image_points[image_id].append(point_id)
     
     return image_points
 
