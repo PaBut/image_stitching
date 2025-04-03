@@ -115,6 +115,8 @@ def convert_dict_tondarray(dict_data):
     for key, value in dict_data.items():
         array[key] = value
 
+    return array
+
 def parse_args():
     """Parse command line arguments"""
     parser = ArgumentParser(description="Process COLMAP data")
