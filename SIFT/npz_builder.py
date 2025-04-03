@@ -87,22 +87,84 @@ def load_camera_txt(camera_txt_path):
     
 #     return image_points
 
-def compute_overlap(image_points):
-    """Computes overlap coefficient for each image pair"""
-    image_ids = list(image_points.keys())
-    overlap_scores = []
+# def compute_overlap(image_points):
+#     """Computes overlap coefficient for each image pair"""
+#     image_ids = list(image_points.keys())
+#     overlap_scores = []
 
+#     for i in range(len(image_ids)):
+#         for j in range(i + 1, len(image_ids)):
+#             img1, img2 = image_ids[i], image_ids[j]
+#             points1 = image_points[img1]
+#             points2 = image_points[img2]
+#             common_points = len(points1.intersection(points2))
+#             total_points = len(points1.union(points2))
+#             score = common_points / total_points if total_points > 0 else 0
+#             overlap_scores.append(((img1, img2), score, []))
+
+#     return overlap_scores
+
+def angle_between_vectors(v1, v2):
+    """Compute angle (in degrees) between two vectors."""
+    v1 = v1 / np.linalg.norm(v1)
+    v2 = v2 / np.linalg.norm(v2)
+    dot_product = np.clip(np.dot(v1, v2), -1.0, 1.0)
+    return np.arccos(dot_product) * 180 / np.pi
+
+def compute_fov(intrinsics):
+    """Compute horizontal and vertical FOV in degrees."""
+    fx, fy, width, height = intrinsics['fx'], intrinsics['fy'], intrinsics['width'], intrinsics['height']
+    fov_h = 2 * np.arctan(width / (2 * fx)) * 180 / np.pi
+    fov_v = 2 * np.arctan(height / (2 * fy)) * 180 / np.pi
+    return fov_h, fov_v
+
+def extract_from_pose_matrix(pose_matrix):
+    """Extract rotation (R) and translation (t) from a 4x4 pose matrix."""
+    R = pose_matrix[0:3, 0:3]  # Top-left 3x3
+    t = pose_matrix[0:3, 3]    # Top-right 3x1
+    return R, t
+
+def estimate_overlap(images, cameras, poses):
+    """Estimate overlapping ratio using poses and intrinsics."""
+    pairs = []
+    image_ids = list(images.keys())
+    
     for i in range(len(image_ids)):
-        for j in range(i + 1, len(image_ids)):
-            img1, img2 = image_ids[i], image_ids[j]
-            points1 = image_points[img1]
-            points2 = image_points[img2]
-            common_points = len(points1.intersection(points2))
-            total_points = len(points1.union(points2))
-            score = common_points / total_points if total_points > 0 else 0
-            overlap_scores.append(((img1, img2), score, []))
+        for j in range(i+1, len(image_ids)):
+            id1, id2 = image_ids[i], image_ids[j]
 
-    return overlap_scores
+            R1, t1 = extract_from_pose_matrix(poses[id1])
+            R2, t2 = extract_from_pose_matrix(poses[id2])
+            
+            # Camera centers: C = -R^T * t
+            C1 = -R1.T.dot(t1)
+            C2 = -R2.T.dot(t2)
+            distance = np.linalg.norm(C1 - C2)
+            
+            # Optical axes
+            z_axis = np.array([0, 0, 1])
+            dir1 = R1.dot(z_axis)
+            dir2 = R2.dot(z_axis)
+            angle = angle_between_vectors(dir1, dir2)
+            
+            # FOV from intrinsics
+            fov_h1, fov_v1 = compute_fov(cameras[id1])
+            fov_h2, fov_v2 = compute_fov(cameras[id2])
+            avg_fov = (fov_h1 + fov_h2) / 2  # Use horizontal FOV for simplicity
+            
+            # Simple overlap heuristic
+            # Vector from C1 to C2
+            # C1_to_C2 = C2 - C1
+            # angle_to_C2 = angle_between_vectors(dir1, C1_to_C2)
+            
+            # Check if C2 is within img1's FOV (and vice versa)
+                # Overlap ratio: decreases with angle and distance
+            overlap = (1 - angle / avg_fov) * (1 - distance / 10.0)
+            pairs.append((
+                (id1, id2), max(0, overlap), []  # Ensure non-negative
+            ))
+    
+    return pairs
 
 def get_depthmap_paths(image_paths):
     """Generates full image paths based on base path and prefix"""
@@ -128,7 +190,7 @@ def parse_args():
     parser.add_argument('--image_prefix', type=str, required=True, help='Image prefix')
     parser.add_argument('--cameras_path', type=str, required=True, help='Cameras file path')
     parser.add_argument('--images_path', type=str, required=True, help='Images file path')
-    parser.add_argument('--points3D_path', type=str, required=False, default=None, help='Points3D file path')
+    # parser.add_argument('--points3D_path', type=str, required=False, default=None, help='Points3D file path')
     return parser.parse_args()
 
 if __name__ == "__main__":    
@@ -136,7 +198,7 @@ if __name__ == "__main__":
 
     scene_name = args.scene_name
     images_txt_path = args.images_path
-    points3D_txt_path = args.points3D_path
+    # points3D_txt_path = args.points3D_path
     camera_txt_path = args.cameras_path
     prefix = args.image_prefix
 
@@ -147,7 +209,7 @@ if __name__ == "__main__":
     depthmaps = get_depthmap_paths(image_names)
     # image_points = load_points3D_txt(points3D_txt_path, [image for image
     #                                                     in image_names.keys() if image_names[image] != None])
-    overlap_results = compute_overlap(image_points)
+    overlap_results = estimate_overlap(image_names, cameras, poses)
     print(f"Computed overlap coefficients for {len(overlap_results)} pairs")
 
     np.savez(f"{scene_name}.npz", image_paths=convert_dict_tondarray(image_names), depth_paths=convert_dict_tondarray(depthmaps),
