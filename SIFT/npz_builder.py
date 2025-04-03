@@ -182,7 +182,7 @@ def get_pairs(db_path, image_idx):
     cursor = conn.cursor()
 
     # Get all matches
-    cursor.execute("SELECT pair_id, num_matches FROM matches")
+    cursor.execute("SELECT pair_id FROM matches")
     matches = cursor.fetchall()
 
     # Close the connection
@@ -190,10 +190,10 @@ def get_pairs(db_path, image_idx):
 
     # Extract and print image pairs
     image_pairs = []
-    for pair_id, num_matches in matches:
+    for pair_id in matches:
         image_id1, image_id2 = pair_id_to_image_ids(pair_id)
         if image_id1 in image_idx and image_id2 in image_idx:
-            pair = ((image_id1, image_id2), num_matches, [])
+            pair = ((image_id1, image_id2), 1, [])
             image_pairs.append(pair)
     
     return image_pairs
