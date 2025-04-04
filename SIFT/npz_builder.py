@@ -67,42 +67,44 @@ def load_camera_txt(camera_txt_path):
             camera_data[camera_id] = (construct_intrinsic_matrix(fx, fy, cx, cy), int(parts[2]), int(parts[3]))  # K, width, height
     return camera_data
 
-# def load_points3D_txt(points3D_txt_path, available_images=None):
-#     """Loads 3D point observations from COLMAP points3D.txt"""
-#     image_points = defaultdict(set)
-#     with open(points3D_txt_path, 'r') as f:
-#         lines = f.readlines()
-#         for line in lines[3:]:  # Skip first 3 header lines
-#             parts = line.split()
-#             if len(parts) < 8:
-#                 continue  # Skip invalid lines
+def load_points3D_txt(points3D_txt_path, available_images=None):
+    """Loads 3D point observations from COLMAP points3D.txt"""
+    image_points = defaultdict(set)
+    with open(points3D_txt_path, 'r') as f:
+        lines = f.readlines()
+        for line in lines[3:]:  # Skip first 3 header lines
+            parts = line.split()
+            if len(parts) < 8:
+                continue  # Skip invalid lines
             
-#             point_id = int(parts[0])
-#             track = parts[8:]  # The track starts from the 9th column
+            point_id = int(parts[0])
+            track = parts[8:]  # The track starts from the 9th column
             
-#             for j in range(0, len(track), 2):
-#                 image_id = int(track[j])
-#                 if image_id in available_images:
-#                     image_points[image_id].add(point_id)
+            for j in range(0, len(track), 2):
+                image_id = int(track[j])
+                if image_id in available_images:
+                    image_points[image_id].add(point_id)
     
-#     return image_points
+    return image_points
 
-# def compute_overlap(image_points):
-#     """Computes overlap coefficient for each image pair"""
-#     image_ids = list(image_points.keys())
-#     overlap_scores = []
+def compute_overlap(image_points):
+    """Computes overlap coefficient for each image pair"""
+    image_ids = list(image_points.keys())
+    overlap_scores = []
 
-#     for i in range(len(image_ids)):
-#         for j in range(i + 1, len(image_ids)):
-#             img1, img2 = image_ids[i], image_ids[j]
-#             points1 = image_points[img1]
-#             points2 = image_points[img2]
-#             common_points = len(points1.intersection(points2))
-#             total_points = len(points1.union(points2))
-#             score = common_points / total_points if total_points > 0 else 0
-#             overlap_scores.append(((img1, img2), score, []))
+    for i in range(len(image_ids)):
+        for j in range(i + 1, len(image_ids)):
+            img1, img2 = image_ids[i], image_ids[j]
+            points1 = image_points[img1]
+            points2 = image_points[img2]
+            # common_points = len(points1.intersection(points2))
+            # total_points = len(points1.union(points2))
+            common_points = len(image_points[img1] & image_points[img2])
+            min_points = min(len(image_points[img1]), len(image_points[img2]))
+            score = common_points / min_points if min_points > 0 else 0
+            overlap_scores.append(((img1, img2), score, []))
 
-#     return overlap_scores
+    return overlap_scores
  
 ############################
 
@@ -218,35 +220,36 @@ def convert_dict_tondarray(dict_data):
 def parse_args():
     """Parse command line arguments"""
     parser = ArgumentParser(description="Process COLMAP data")
-    parser.add_argument('--scene_name', type=str, required=True, help='Scene name')
-    parser.add_argument('--image_prefix', type=str, required=True, help='Image prefix')
+    parser.add_argument('--output', type=str, required=True, help='Output path')
+    parser.add_argument('--image_prefix', type=str, required=False, help='Image prefix')
     parser.add_argument('--cameras_path', type=str, required=True, help='Cameras file path')
     parser.add_argument('--images_path', type=str, required=True, help='Images file path')
-    # parser.add_argument('--points3D_path', type=str, required=False, default=None, help='Points3D file path')
-    parser.add_argument('--db_path', type=str, required=True, default=None, help='Database file path')
+    parser.add_argument('--points3D_path', type=str, required=True, default=None, help='Points3D file path')
+    # parser.add_argument('--db_path', type=str, required=True, default=None, help='Database file path')
     return parser.parse_args()
 
 if __name__ == "__main__":    
     args = parse_args()
 
-    scene_name = args.scene_name
+    output_path = args.output
     images_txt_path = args.images_path
-    # points3D_txt_path = args.points3D_path
+    points3D_txt_path = args.points3D_path
     camera_txt_path = args.cameras_path
     prefix = args.image_prefix
-    db_path = args.db_path
+    # db_path = args.db_path
 
     cameras = load_camera_txt(camera_txt_path)
     print(f"Loaded {len(cameras)} cameras")
     image_names, poses, camera_intristics, image_points = load_images_txt(images_txt_path, cameras, prefix)
     print(f"Loaded {len(image_names)} images")
     depthmaps = get_depthmap_paths(image_names)
-    # image_points = load_points3D_txt(points3D_txt_path, [image for image
-    #                                                     in image_names.keys() if image_names[image] != None])
-    overlap_results = get_pairs(db_path, image_names.keys())
+    image_points = load_points3D_txt(points3D_txt_path, [image for image
+                                                        in image_names.keys() if image_names[image] != None])
+    # overlap_results = get_pairs(db_path, image_names.keys())
+    overlap_results = compute_overlap(image_points)
     print(f"Computed overlap coefficients for {len(overlap_results)} pairs")
 
-    np.savez(f"{scene_name}.npz", image_paths=convert_dict_tondarray(image_names), depth_paths=convert_dict_tondarray(depthmaps),
+    np.savez(output_path, image_paths=convert_dict_tondarray(image_names), depth_paths=convert_dict_tondarray(depthmaps),
             poses=convert_dict_tondarray(poses), camera_intristics=convert_dict_tondarray({key: value[0] for key, value in camera_intristics.items()}),
             pair_infos=np.array(overlap_results, dtype=np.dtype([
                 ('image_pair', 'i4', (2,)),  # Pair of int IDs
@@ -254,4 +257,4 @@ if __name__ == "__main__":
                 ('extra_data', 'O')          # List of floats (object type)
             ])))
 
-    print(f"Saved overlap coefficients to {scene_name}.npz")
+    print(f"Saved overlap coefficients to {output_path}")
