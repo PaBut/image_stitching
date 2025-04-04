@@ -10,6 +10,7 @@ DEPTHMAP_PATH = "depth_maps/"
 def load_images_txt(images_txt_path, camera_info, prefix=None):
     """Loads image poses and paths from COLMAP images.txt"""
     image_paths = {}
+    depth_paths = {}
     poses = {}
     camera_intristics = {}
     image_points = {}
@@ -30,9 +31,10 @@ def load_images_txt(images_txt_path, camera_info, prefix=None):
                 image_points[image_id] = set(point3d_ids)
                 poses[image_id] = np.hstack([rotation_matrix, np.array([tx, ty, tz]).reshape(-1, 1)])
                 image_paths[image_id] = os.path.join(IMAGE_PATH, image_name)
+                depth_paths[image_id] = os.path.join(DEPTHMAP_PATH, image_name) + ".photometric.bin"
                 camera_intristics[image_id] = camera_info[camera_id]
 
-    return image_paths, poses, camera_intristics, image_points
+    return image_paths, depth_paths, poses, camera_intristics, image_points
 
 def construct_intrinsic_matrix(fx, fy, cx, cy):
     K = np.array([[fx, 0, cx],
@@ -200,11 +202,6 @@ def get_pairs(db_path, image_idx):
     
     return image_pairs
 
-def get_depthmap_paths(image_paths):
-    """Generates full image paths based on base path and prefix"""
-    depth_maps = map(lambda x: x.replace(IMAGE_PATH, DEPTHMAP_PATH), image_names.copy())
-    return image_paths
-
 def convert_dict_tondarray(dict_data):
     max_index = max(dict_data.keys()) + 1  # Ensure space for the largest index
 
@@ -240,9 +237,8 @@ if __name__ == "__main__":
 
     cameras = load_camera_txt(camera_txt_path)
     print(f"Loaded {len(cameras)} cameras")
-    image_names, poses, camera_intristics, image_points = load_images_txt(images_txt_path, cameras, prefix)
+    image_names, depthmaps, poses, camera_intristics, image_points = load_images_txt(images_txt_path, cameras, prefix)
     print(f"Loaded {len(image_names)} images")
-    depthmaps = get_depthmap_paths(image_names)
     image_points = load_points3D_txt(points3D_txt_path, [image for image
                                                         in image_names.keys() if image_names[image] != None])
     # overlap_results = get_pairs(db_path, image_names.keys())
