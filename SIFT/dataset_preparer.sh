@@ -13,10 +13,14 @@ while IFS= read -r scene_name; do
     if [ -n "$scene_name" ]; then
         mkdir -p "$output_directory/$scene_name"
         echo "Processing scene: $scene_name"
-        cp "$input_directory/$scene_name/dense/images" "$output_directory/$scene_name/images" -r
-        cp "$input_directory/$scene_name/dense/stereo/depth_maps" "$output_directory/$scene_name/depth_maps" -r
+        colmap model_converter \
+            --input_path outputs/$scene_name/gim_dkm/sparse \
+            --output_path outputs/$scene_name/gim_dkm/sparse/txt \
+            --output_type TXT
+        cp "$input_directory/$scene_name/gim_dkm/dense/images" "$output_directory/$scene_name/images" -r
+        cp "$input_directory/$scene_name/gim_dkm/dense/stereo/depth_maps" "$output_directory/$scene_name/depth_maps" -r
         python3 npz_builder.py --output "$output_directory/$scene_name.npz" \
-                                --cameras_path "$input_directory/$scene_name/cameras.txt" \
-                                --images_path "$input_directory/$scene_name/images.txt"
+                                --cameras_path "$input_directory/$scene_name/gim_dkm/sparse/txt/cameras.txt" \
+                                --images_path "$input_directory/$scene_name/gim_dkm/sparse/txt/images.txt"
     fi
 done < "$scene_list"
