@@ -29,7 +29,10 @@ def load_images_txt(images_txt_path, camera_info, prefix=None):
                 keypoints_data = lines[i+1].split()
                 point3d_ids = [int(keypoints_data[j]) for j in range(2, len(keypoints_data), 3) if int(keypoints_data[j]) != -1]
                 image_points[image_id] = set(point3d_ids)
-                poses[image_id] = np.hstack([rotation_matrix, np.array([tx, ty, tz]).reshape(-1, 1)])
+                pose_matrix = np.eye(4) 
+                pose_matrix[:3, :3] = rotation_matrix  # Set rotation
+                pose_matrix[:3, 3] = [tx, ty, tz]
+                poses[image_id] = pose_matrix
                 image_paths[image_id] = os.path.join(IMAGE_PATH, image_name)
                 depth_paths[image_id] = os.path.join(DEPTHMAP_PATH, image_name) + ".photometric.bin"
                 camera_intristics[image_id] = camera_info[camera_id]
