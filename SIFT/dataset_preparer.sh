@@ -12,7 +12,7 @@ output_directory=$3
 while IFS= read -r scene_name; do
     if [ -n "$scene_name" ]; then
         mkdir -p "$output_directory/$scene_name"
-        mkdir -p "$input_directory/$scene_name/gim_dkm/sparse/txt
+        mkdir -p "$input_directory/$scene_name/gim_dkm/sparse/txt"
         echo "Processing scene: $scene_name"
         colmap model_converter \
             --input_path $input_directory/$scene_name/gim_dkm/sparse \
