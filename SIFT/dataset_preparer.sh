@@ -21,6 +21,7 @@ while IFS= read -r scene_name; do
         cp "$input_directory/$scene_name/gim_dkm/dense/stereo/depth_maps" "$output_directory/$scene_name/depth_maps" -r
         python3 npz_builder.py --output "$output_directory/$scene_name.npz" \
                                 --cameras_path "$input_directory/$scene_name/gim_dkm/sparse/txt/cameras.txt" \
-                                --images_path "$input_directory/$scene_name/gim_dkm/sparse/txt/images.txt"
+                                --images_path "$input_directory/$scene_name/gim_dkm/sparse/txt/images.txt" \
+                                --points3D_path "$input_directory/$scene_name/gim_dkm/sparse/txt/points3D.txt"
     fi
 done < "$scene_list"
