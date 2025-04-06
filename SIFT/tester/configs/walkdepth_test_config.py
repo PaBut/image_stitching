@@ -4,7 +4,7 @@ from tester.configs.base import cfg
 TEST_BASE_PATH = "./data/WalkDepth"
 
 cfg.DATASET.TEST_DATA_SOURCE = "MegaDepth"
-cfg.DATASET_TEST_WALKDEPTH = True
+cfg.DATASET.TEST_WALKDEPTH = True
 cfg.DATASET.TEST_DATA_ROOT = TEST_BASE_PATH
 cfg.DATASET.TEST_NPZ_ROOT = f"{TEST_BASE_PATH}"
 
