@@ -121,8 +121,6 @@ class PL_Tester(pl.LightningModule):
 
         self.test_step_outputs.append(ret_dict)
 
-        logger.info(f"{ret_dict["dumps"][0]["epi_errs"]}")
-
         return ret_dict
 
     def on_test_epoch_end(self):
