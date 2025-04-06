@@ -120,7 +120,7 @@ class PL_Tester(pl.LightningModule):
 
         return ret_dict
 
-    def test_epoch_end(self, outputs):
+    def on_test_epoch_end(self):
         # metrics: dict of list, numpy
         outputs = self.test_step_outputs
         _metrics = [o["metrics"] for o in outputs]
