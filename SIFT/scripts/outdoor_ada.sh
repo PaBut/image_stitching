@@ -10,7 +10,6 @@ cd $PROJECT_DIR
 model_type=$1
 pretrained_model_path=$2
 
-data_cfg_path="configs/data/aachen_test_config.py"
 main_cfg_path="configs/loftr/outdoor/loftr_ds_dense.py"
 ckpt_path="weights/adamatcher.ckpt"
 
@@ -23,7 +22,6 @@ batch_size=1  # per gpu
 
 CUDA_VISIBLE_DEVICES=1 python3 -u ./test_lightning.py \
     ${data_cfg_path} \
-    ${main_cfg_path} \
     --ckpt_path=${ckpt_path} \
     --dump_dir=${dump_dir} \
     --gpus=${n_gpus_per_node} --num_nodes=${n_nodes} --accelerator="ddp" \
