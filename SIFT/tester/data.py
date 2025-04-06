@@ -13,7 +13,7 @@ from torch.utils.data import (ConcatDataset, DataLoader, Dataset,
 from torch.utils.data.dataset import Dataset
 from tqdm import tqdm
 
-from tester.data.megadepth import MegaDepthDataset
+from tester.datasets.megadepth import MegaDepthDataset
 # from src.datasets.scannet import ScanNetDataset
 # from src.datasets.walk.walk import WALKDataset
 from tester.utils import comm
