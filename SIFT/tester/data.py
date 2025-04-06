@@ -209,6 +209,8 @@ class MultiSceneDataModule(pl.LightningDataModule):
         with open(scene_list_path, 'r') as f:
             npz_names = [name.split()[0] for name in f.readlines()]
 
+        logger.info(f"{npz_names}")
+
         if mode == 'train':
             local_npz_names = get_local_split(npz_names, self.world_size,
                                               self.rank, self.seed)
