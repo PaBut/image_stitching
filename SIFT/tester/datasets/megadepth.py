@@ -88,6 +88,8 @@ class MegaDepthDataset(Dataset):
                              self.scene_info['image_paths'][idx0])
         img_name1 = osp.join(self.root_dir,
                              self.scene_info['image_paths'][idx1])
+        
+        logger.info(f'Loading {img_name0} and {img_name1}')
 
         # TODO: Support augmentation & handle seeds for each worker correctly.
         # if 'rots' in self.scene_info and 0:
