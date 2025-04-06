@@ -3,6 +3,7 @@ from copy import deepcopy
 from enum import Enum
 from kornia.geometry.epipolar import numeric
 from cv2 import Mat
+from loguru import logger
 import torch
 from enums import EnvironmentType
 from tools.AdaMatcherUtils.adamatcher.utils.cvpr_ds_config import lower_config
@@ -139,7 +140,7 @@ class AdaMatcherMatchFinder(MatchFinder):
         weights_path = self.WEIGHTS_PATH
         if pretrained_ckpt is not None:
             weights_path = pretrained_ckpt
-        state_dict = torch.load(weights_path)["state_dict"]
+        state_dict = torch.load(weights_path, weights_only=True)["state_dict"]
         
         new_state_dict = {}
         prefix = 'matcher.'
@@ -177,6 +178,8 @@ class AdaMatcherMatchFinder(MatchFinder):
 
             pts0 = batch["mkpts0_f"].cpu().numpy()
             pts1 = batch["mkpts1_f"].cpu().numpy()
+
+            logger.info(f"keypoints shape: {pts0.shape}, {pts1.shape}")
 
             return pts0 * np.array([w_difference, h_difference]), pts1 * np.array([w_difference, h_difference])
 
