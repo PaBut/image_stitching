@@ -92,7 +92,7 @@ class LoFTRMatchFinder(MatchFinder):
     INDOOR_WEIGHTS_PATH = r'.\tools\LoFTR\weights\indoor_ds_new.ckpt'
     OUTDOOR_WEIGHTS_PATH = r'.\tools\LoFTR\weights\outdoor_ds.ckpt'
     FIXED_WIDTH = 640
-    def __init__(self, loftr_type: EnvironmentType):
+    def __init__(self, loftr_type: EnvironmentType, pretrained_ckpt=None):
         _default_cfg = deepcopy(default_cfg)
         if loftr_type == EnvironmentType.Indoor:
             _default_cfg['coarse']['temp_bug_fix'] = True  # set to False when using the old ckpt
@@ -102,6 +102,8 @@ class LoFTRMatchFinder(MatchFinder):
             weights_path = self.OUTDOOR_WEIGHTS_PATH
             # _default_cfg['match_coarse']['match_type'] = 'sinkhorn'
             # _default_cfg['match_coarse']['sparse_spvs'] = False
+        if pretrained_ckpt is not None:
+            weights_path = pretrained_ckpt
         matcher = LoFTR(config=_default_cfg)
         matcher.load_state_dict(torch.load(weights_path)['state_dict'])
         self.matcher = matcher.eval().cuda()
@@ -125,7 +127,7 @@ class AdaMatcherMatchFinder(MatchFinder):
     FIXED_WIDTH = 640
     FIXED_DIVISION = 32
     WEIGHTS_PATH = r'.\tools\AdaMatcherUtils\weights\adamatcher.ckpt'
-    def __init__(self):
+    def __init__(self, pretrained_ckpt=None):
         config = get_cfg_defaults()
         # config.merge_from_file(main_config_path)
         _config = lower_config(config)
@@ -134,7 +136,10 @@ class AdaMatcherMatchFinder(MatchFinder):
             config = _config["adamatcher"],
             training=False
         )  
-        state_dict = torch.load(self.WEIGHTS_PATH)["state_dict"]
+        weights_path = self.WEIGHTS_PATH
+        if pretrained_ckpt is not None:
+            weights_path = pretrained_ckpt
+        state_dict = torch.load(weights_path)["state_dict"]
         
         new_state_dict = {}
         prefix = 'matcher.'
