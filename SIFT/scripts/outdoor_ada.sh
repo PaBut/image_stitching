@@ -21,7 +21,7 @@ n_gpus_per_node=-1 # -1
 torch_num_workers=4 # 4
 batch_size=1  # per gpu
 
-CUDA_VISIBLE_DEVICES=1 python3 -u ./test.py \
+CUDA_VISIBLE_DEVICES=1 python3 -u ./test_lightning.py \
     ${data_cfg_path} \
     ${main_cfg_path} \
     --ckpt_path=${ckpt_path} \
