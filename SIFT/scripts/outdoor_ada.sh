@@ -16,7 +16,7 @@ ckpt_path="weights/adamatcher.ckpt"
 dump_dir="dump/loftr_ds_outdoor"
 profiler_name="inference"
 n_nodes=1  # manually keep this the same with --nodes
-n_gpus_per_node=-1 # -1
+n_gpus_per_node=1 # -1
 torch_num_workers=4 # 4
 batch_size=1  # per gpu
 
