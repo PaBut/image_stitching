@@ -82,8 +82,8 @@ class PL_Tester(pl.LightningModule):
 
     def test_step(self, batch, batch_idx):
         # with self.profiler.profile("AdaMatcher"):
-        img0 = batch["image0"].permute(0, 2, 3, 1).cpu().numpy()
-        img1 = batch["image1"].permute(0, 2, 3, 1).cpu().numpy()
+        img0 = batch["image0"].permute(0, 2, 3, 1).cpu().numpy() * 255
+        img1 = batch["image1"].permute(0, 2, 3, 1).cpu().numpy() * 255
         logger.info(f"img0 shape: {img0.shape}, img1 shape: {img1.shape}, dtype: {img0.dtype}")
         k1, k2 = self.matcher.find_matches(img0[0], img1[0])
         logger.info(f"keypoints shape: {k1.shape}, {k2.shape}")
