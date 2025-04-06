@@ -62,10 +62,6 @@ if __name__ == '__main__':
     config.merge_from_file(args.data_cfg_path)
     pl.seed_everything(config.TRAINER.SEED)  # reproducibility
 
-    # tune when testing
-    if args.thr is not None:
-        config.ADAMATCHER.MATCH_COARSE.THR = args.thr
-
     loguru_logger.info(f'Args and config initialized!')
 
     # lightning module
