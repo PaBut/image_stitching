@@ -15,7 +15,7 @@ while IFS= read -r scene_name; do
         
         if [ -e "$input_directory/$scene_name/gim_dkm/sparse/cameras.bin" ]; then
             input_path="$input_directory/$scene_name/gim_dkm/sparse"
-        elif [ -e "$input_directory/$scene_name/gim_lightglue/sparse/cameras.bin"]; then
+        elif [ -e "$input_directory/$scene_name/gim_lightglue/sparse/cameras.bin" ]; then
             input_path="$input_directory/$scene_name/gim_lightglue/sparse"
         else
             echo "No sparse model found for scene: $scene_name"
