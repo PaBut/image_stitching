@@ -121,7 +121,7 @@ class PL_Tester(pl.LightningModule):
 
         self.test_step_outputs.append(ret_dict)
 
-        logger.info(f"{ret_dict["epi_errs"]}")
+        logger.info(f"{ret_dict["dumps"][0]["epi_errs"]}")
 
         return ret_dict
 
