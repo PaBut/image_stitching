@@ -187,7 +187,7 @@ class MultiSceneDataModule(pl.LightningDataModule):
                 data_source=self.test_data_source,
                 min_overlap_score=self.min_overlap_score_test,
                 pose_dir=self.test_pose_root,
-                dcfg=self.dataset_cfg.TEST,
+                dcfg=self.dataset_cfg.TESTS,
                 walk_depth=self.test_walkdepth,
             )
             logger.info(f'[rank:{self.rank}]: Test Dataset loaded!')
