@@ -34,6 +34,6 @@ while IFS= read -r scene_name; do
         python3 npz_builder.py --output "$output_directory/$scene_name.npz" \
                                 --cameras_path "$input_path/txt/cameras.txt" \
                                 --images_path "$input_path/txt/images.txt" \
-                                --points3D_path "$input_path/points3D.txt"
+                                --points3D_path "$input_path/txt/points3D.txt"
     fi
 done < "$scene_list"
