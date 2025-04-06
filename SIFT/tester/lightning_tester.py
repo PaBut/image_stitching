@@ -86,6 +86,7 @@ class PL_Tester(pl.LightningModule):
         img1 = batch["image1"].permute(0, 2, 3, 1).cpu().numpy()
         logger.info(f"img0 shape: {img0.shape}, img1 shape: {img1.shape}")
         k1, k2 = self.matcher.find_matches(img0[0], img1[0])
+        logger.info(f"keypoints shape: {k1.shape}, {k2.shape}")
         batch["mkpts0_f"] = torch.from_numpy(k1).cuda().float().unsqueeze(0)
         batch["mkpts1_f"] = torch.from_numpy(k2).cuda().float().unsqueeze(0)
         batch["m_bids"] = [0]
