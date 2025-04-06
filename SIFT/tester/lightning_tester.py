@@ -34,6 +34,8 @@ class PL_Tester(pl.LightningModule):
         self.config = config  # full config
         self.profiler = profiler or PassThroughProfiler()
 
+        torch.serialization.add_safe_globals([ModelCheckpoint])
+
         # Matcher: AdaMatcher
         if matcher_type == "sift":
             self.matcher = FeatureDetectorMatchFinder(FeatureDetector.SIFT)
