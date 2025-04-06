@@ -82,13 +82,20 @@ if __name__ == '__main__':
     data_module = MultiSceneDataModule(args, config)
     loguru_logger.info(f'DataModule initialized!')
 
+    test_params = {
+        "accelerator": args.accelerator,
+        "devices": 1,  # Maps 'gpus' to 'devices'
+        "num_nodes": args.num_nodes,
+        "benchmark": args.benchmark,
+    }
+
     # lightning trainer
-    trainer = pl.Trainer(**vars(args),
-                         strategy=SingleDeviceStrategy(
+    trainer = pl.Trainer(strategy=SingleDeviceStrategy(
                             device=torch.device("cuda:0"),
                         ),
                         replace_sampler_ddp=False, 
-                        logger=False)
+                        logger=False,
+                        **test_params)
 
     loguru_logger.info(f'Start testing!')
     trainer.test(model, datamodule=data_module, verbose=False)
