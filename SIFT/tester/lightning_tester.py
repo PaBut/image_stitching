@@ -97,7 +97,7 @@ class PL_Tester(pl.LightningModule):
         with self.profiler.profile("dump_results"):
             if self.dump_dir is not None:
 
-                keys_to_save = {"mkpts0_f", "mkpts1_f", "scores", "epi_errs"}
+                keys_to_save = {"mkpts0_f", "mkpts1_f", "epi_errs"}
                 pair_names = list(zip(*batch["pair_names"]))
                 bs = batch["image0"].shape[0]
                 dumps = []
