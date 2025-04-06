@@ -87,8 +87,8 @@ class PL_Tester(pl.LightningModule):
         logger.info(f"img0 shape: {img0.shape}, img1 shape: {img1.shape}, dtype: {img0.dtype}")
         k1, k2 = self.matcher.find_matches(img0[0], img1[0])
         logger.info(f"keypoints shape: {k1.shape}, {k2.shape}")
-        batch["mkpts0_f"] = torch.from_numpy(k1).cuda().float().unsqueeze(0)
-        batch["mkpts1_f"] = torch.from_numpy(k2).cuda().float().unsqueeze(0)
+        batch["mkpts0_f"] = torch.from_numpy(k1).cuda().float()#.unsqueeze(0)
+        batch["mkpts1_f"] = torch.from_numpy(k2).cuda().float()#.unsqueeze(0)
         batch["m_bids"] = torch.zeros(k1.shape[0], dtype=torch.long)
 
         ret_dict, rel_pair_names = self._compute_metrics(batch)
