@@ -39,7 +39,6 @@ def symmetric_epipolar_distance(pts0, pts1, E, K0, K1):
         pts0 (torch.Tensor): [N, 2]
         E (torch.Tensor): [3, 3]
     """
-    logger.debug(f"pts0: {pts0.shape}, pts1: {pts1.shape}, E: {E.shape}")
     pts0 = (pts0 - K0[[0, 1], [2, 2]][None]) / K0[[0, 1], [0, 1]][None]
     pts1 = (pts1 - K1[[0, 1], [2, 2]][None]) / K1[[0, 1], [0, 1]][None]
     pts0 = convert_points_to_homogeneous(pts0)
@@ -124,10 +123,8 @@ def compute_symmetrical_epipolar_errors(data):
     pts1 = data["mkpts1_f"]
 
     epi_errs = []
-    logger.debug(f"m_bids: {Tx.size(0)}")
     for bs in range(Tx.size(0)):
         mask = m_bids == bs
-        logger.debug(f"mask: {mask}, pts0: {pts0[0].shape}, pts1: {pts1[mask].shape}")
         epi_errs.append(
             symmetric_epipolar_distance(
                 pts0[mask], pts1[mask], E_mat[bs], data["K0"][bs], data["K1"][bs]

@@ -41,8 +41,6 @@ class MegaDepthDataset(Dataset):
         self.root_dir = root_dir
         self.mode = mode
         self.scene_id = npz_path.split('.')[0]
-        logger.info(f'Loading {npz_path}...')
-
         # prepare scene_info and pair_info
         # pdb.set_trace()
         if mode == 'test' and min_overlap_score != 0:
@@ -90,8 +88,6 @@ class MegaDepthDataset(Dataset):
         img_name1 = osp.join(self.root_dir,
                              self.scene_info['image_paths'][idx1])
         
-        logger.info(f'Loading {img_name0} and {img_name1}')
-
         # TODO: Support augmentation & handle seeds for each worker correctly.
         # if 'rots' in self.scene_info and 0:
         #     rot0, rot1 = self.scene_info['rots'][idx]
@@ -121,8 +117,6 @@ class MegaDepthDataset(Dataset):
             )
         else:
             depth0 = depth1 = torch.tensor([])
-
-        logger.info(f'Loading {image0.shape} and {image1.shape} done.')
 
         # read intrinsics of original size
         K_0 = torch.tensor(self.scene_info['intrinsics'][idx0].copy(),
