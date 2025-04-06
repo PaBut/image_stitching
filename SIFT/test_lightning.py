@@ -93,8 +93,7 @@ if __name__ == '__main__':
     trainer = pl.Trainer(strategy=SingleDeviceStrategy(
                             device=torch.device("cuda:0"),
                         ),
-                        replace_sampler_ddp=False, 
-                        logger=False,
+                        logger=True,
                         **test_params)
 
     loguru_logger.info(f'Start testing!')
