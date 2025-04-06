@@ -60,7 +60,6 @@ if __name__ == '__main__':
     # init default-cfg and merge it with the main- and data-cfg
     config = get_cfg_defaults()
     config.merge_from_file(args.main_cfg_path)
-    config.merge_from_file(args.data_cfg_path)
     pl.seed_everything(config.TRAINER.SEED)  # reproducibility
 
     # tune when testing
