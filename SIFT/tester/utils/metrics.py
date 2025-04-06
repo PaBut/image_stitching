@@ -39,6 +39,7 @@ def symmetric_epipolar_distance(pts0, pts1, E, K0, K1):
         pts0 (torch.Tensor): [N, 2]
         E (torch.Tensor): [3, 3]
     """
+    logger.debug(f"pts0: {pts0.shape}, pts1: {pts1.shape}, E: {E.shape}")
     pts0 = (pts0 - K0[[0, 1], [2, 2]][None]) / K0[[0, 1], [0, 1]][None]
     pts1 = (pts1 - K1[[0, 1], [2, 2]][None]) / K1[[0, 1], [0, 1]][None]
     pts0 = convert_points_to_homogeneous(pts0)
