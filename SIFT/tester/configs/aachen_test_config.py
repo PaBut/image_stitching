@@ -1,7 +1,7 @@
 from tester.configs.base import cfg
 
 
-TEST_BASE_PATH = "./data/Aachen"
+TEST_BASE_PATH = "data/Aachen"
 
 cfg.DATASET.TEST_DATA_SOURCE = "MegaDepth"
 cfg.DATASET.TEST_DATA_ROOT = TEST_BASE_PATH
@@ -17,3 +17,4 @@ cfg.DATASET.TEST_LIST_PATH = f"{TEST_BASE_PATH}/aachen.txt"
 
 cfg.DATASET.MGDPT_IMG_RESIZE = 832 
 cfg.DATASET.MIN_OVERLAP_SCORE_TEST = 0.0
+
