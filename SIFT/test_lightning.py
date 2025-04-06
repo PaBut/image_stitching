@@ -3,11 +3,14 @@ import pprint
 
 import pytorch_lightning as pl
 from loguru import logger as loguru_logger
+import torch
 
 from tools.AdaMatcherUtils.config.default import get_cfg_defaults
 from tester.data import MultiSceneDataModule
 from tester.lightning_tester import PL_Tester
 from tester.utils.profiler import build_profiler
+
+from pytorch_lightning.strategies import SingleDeviceStrategy
 
 
 def parse_args():
@@ -81,6 +84,9 @@ if __name__ == '__main__':
 
     # lightning trainer
     trainer = pl.Trainer(**vars(args),
+                         strategy=SingleDeviceStrategy(
+                            device=torch.device("cuda:0"),
+                        ),
                         replace_sampler_ddp=False, 
                         logger=False)
 
