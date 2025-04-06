@@ -89,7 +89,7 @@ class PL_Tester(pl.LightningModule):
         logger.info(f"keypoints shape: {k1.shape}, {k2.shape}")
         batch["mkpts0_f"] = torch.from_numpy(k1).cuda().float().unsqueeze(0)
         batch["mkpts1_f"] = torch.from_numpy(k2).cuda().float().unsqueeze(0)
-        batch["m_bids"] = torch.tensor([0])
+        batch["m_bids"] = torch.zeros(k1.shape[0], dtype=torch.long)
 
         ret_dict, rel_pair_names = self._compute_metrics(batch)
         # self.metric_time += time.monotonic() - t1
