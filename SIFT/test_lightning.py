@@ -68,6 +68,7 @@ if __name__ == '__main__':
     profiler = build_profiler(args.profiler_name)
     model = PL_Tester(
         config,
+        matcher_type=args.model_type,
         pretrained_ckpt=args.ckpt_path,
         profiler=profiler,
         dump_dir=args.dump_dir,
