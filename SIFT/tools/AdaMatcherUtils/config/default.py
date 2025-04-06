@@ -91,13 +91,14 @@ _CN.ADAMATCHER.LOSS.FINE_CORRECT_THR = 1.0  # for filtering valid fine-level gts
 _CN.DATASET = CN()
 # 1. data config
 # training and validating
-_CN.DATASET.TRAINVAL_DATA_SOURCE = None  # options: ['ScanNet', 'MegaDepth']
+_CN.DATASET.TRAIN_DATA_SOURCE = None  # options: ['ScanNet', 'MegaDepth']
 _CN.DATASET.TRAIN_WALKDEPTH = None
 _CN.DATASET.TRAIN_DATA_ROOT = None
 _CN.DATASET.TRAIN_POSE_ROOT = None  # (optional directory for poses)
 _CN.DATASET.TRAIN_NPZ_ROOT = None
 _CN.DATASET.TRAIN_LIST_PATH = None
 _CN.DATASET.TRAIN_INTRINSIC_PATH = None
+_CN.DATASET.VAL_DATA_SOURCE = None  # options: ['ScanNet', 'MegaDepth']
 _CN.DATASET.VAL_DATA_ROOT = None
 _CN.DATASET.VAL_WALKDEPTH = None
 _CN.DATASET.VAL_POSE_ROOT = None  # (optional directory for poses)
