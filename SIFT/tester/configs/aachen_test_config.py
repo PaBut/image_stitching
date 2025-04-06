@@ -1,4 +1,4 @@
-from base import cfg
+from tester.configs.base import cfg
 
 
 TEST_BASE_PATH = "./data/Aachen"
