@@ -127,10 +127,10 @@ def compute_symmetrical_epipolar_errors(data):
     logger.debug(f"m_bids: {Tx.size(0)}")
     for bs in range(Tx.size(0)):
         mask = m_bids == bs
-        logger.debug(f"mask: {mask}, pts0: {pts0[mask].shape}, pts1: {pts1[mask].shape}")
+        logger.debug(f"mask: {mask}, pts0: {pts0[0].shape}, pts1: {pts1[mask].shape}")
         epi_errs.append(
             symmetric_epipolar_distance(
-                pts0[mask], pts1[mask], E_mat[bs], data["K0"][bs], data["K1"][bs]
+                pts0[bs], pts1[bs], E_mat[bs], data["K0"][bs], data["K1"][bs]
             )
         )
     epi_errs = torch.cat(epi_errs, dim=0)
