@@ -41,6 +41,7 @@ class MegaDepthDataset(Dataset):
         self.root_dir = root_dir
         self.mode = mode
         self.scene_id = npz_path.split('.')[0]
+        logger.info(f'Loading {self.scene_id}...')
 
         # prepare scene_info and pair_info
         # pdb.set_trace()
