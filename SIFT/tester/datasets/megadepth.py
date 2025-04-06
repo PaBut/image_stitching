@@ -121,6 +121,8 @@ class MegaDepthDataset(Dataset):
         else:
             depth0 = depth1 = torch.tensor([])
 
+        logger.info(f'Loading {image0.shape} and {image1.shape} done.')
+
         # read intrinsics of original size
         K_0 = torch.tensor(self.scene_info['intrinsics'][idx0].copy(),
                            dtype=torch.float).reshape(3, 3)
