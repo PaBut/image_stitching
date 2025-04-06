@@ -10,7 +10,7 @@ cd $PROJECT_DIR
 model_type=$1
 pretrained_model_path=$2
 
-main_cfg_path="configs/loftr/outdoor/loftr_ds_dense.py"
+data_cfg_path="configs/data/aachen_test_config.py"
 ckpt_path="weights/adamatcher.ckpt"
 
 dump_dir="dump/loftr_ds_outdoor"
