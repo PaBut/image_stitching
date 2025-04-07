@@ -415,7 +415,6 @@ def compute_homography_precision(data, thresholds):
 
     for t in thresholds:
         precision = precisions[f"H_auc@{t}px"]
-        logger.info(f"Homography precision at {t}px: {precision}")
         precision = precision / Tx.size(0)
         data.update({f"H_auc@{t}px": precision})    
 
