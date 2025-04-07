@@ -10,15 +10,17 @@ def process_file(filename, base_path):
     try:
         with open(filename, 'r', encoding='utf-8') as file:
             for line in file:
-                npz = np.load(os.path.join(base_path, line.strip())+".npz", allow_pickle=True)
+                npz_path = os.path.join(base_path, line.strip()) + ".npz"
+                if not os.path.exists(npz_path):
+                    print(f"File not found: {npz_path}")
+                    continue
+                npz = np.load(npz_path, allow_pickle=True)
                 images = npz['image_paths']
                 pairs = npz['pair_infos']
 
                 img_count += len(images)
                 pair_count += len(pairs)
                 valid_pair_count += len([pair for pair in pairs if pair[1] > 0.1])
-    except FileNotFoundError:
-        print(f"File '{filename}' not found.")
     except Exception as e:
         print(f"An error occurred: {e}")
 
