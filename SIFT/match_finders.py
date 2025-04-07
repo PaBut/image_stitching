@@ -85,6 +85,9 @@ class FeatureDetectorMatchFinder(MatchFinder):
         src_pts = np.float32([keypoints1[m.trainIdx].pt for m in good_matches])
         dst_pts = np.float32([keypoints2[m.queryIdx].pt for m in good_matches])
 
+        if len(src_pts) == 0 or len(dst_pts) == 0:
+            return np.empty((1, 2), dtype=float), np.empty((1, 2), dtype=float)
+
         return src_pts, dst_pts
         # else:
         #     return np.empty((1, 2), dtype=float), np.empty((1, 2), dtype=float)
