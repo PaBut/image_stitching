@@ -10,7 +10,7 @@ def process_file(filename, base_path):
     try:
         with open(filename, 'r', encoding='utf-8') as file:
             for line in file:
-                npz = np.load(os.path.join(base_path, line.strip()), allow_pickle=True)
+                npz = np.load(os.path.join(base_path, line.strip())+".npz", allow_pickle=True)
                 images = npz['image_paths']
                 pairs = npz['pair_infos']
 
