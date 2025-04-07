@@ -4,6 +4,7 @@ import random
 import re
 import cv2
 from cv2 import Mat
+import numpy as np
 
 
 def get_files_from_directory(directory):
@@ -85,6 +86,41 @@ class ISIQADataModule(DataModule):
 
         return [(cv2.imread(img_name[0]),
                   cv2.imread(img_name[1])) for img_name in img_names]
+    
+
+class AachenDataModule(DataModule):
+    def __init__(self, data_root: str, npz_path: str, min_overlap_score: float = 0.2):
+        self.data_root = data_root
+        self.scene_info = dict(np.load(npz_path, allow_pickle=True))
+
+        self.files : list[tuple[str, str]] = []
+
+        self.pair_infos = self.scene_info['pair_infos'].copy()
+
+        self.pair_infos = [
+            pair_info for pair_info in self.pair_infos
+            if pair_info[1] > min_overlap_score
+        ]
+
+    def get_random_pair(self) -> tuple[Mat, Mat]:
+        img_names = random.sample(self.pair_infos, 1)[0]
+
+        (img1, img2), _, _ = img_names
+
+        print(img1)
+        print(img1)
+
+        img1 = cv2.imread(os.path.join(self.data_root, img1))
+        img2 = cv2.imread(os.path.join(self.data_root, img2))
+
+        return img1, img2
+    
+    def get_n_random_pairs(self, n: int) -> list[tuple[Mat, Mat]]:
+        n = min(len(self.files), n)
+        pairs = random.sample(self.pair_infos, n)
+
+        return [(cv2.imread(img_names[0][0]),
+                  cv2.imread(img_names[0][1])) for img_names in pairs]
 
 
         
