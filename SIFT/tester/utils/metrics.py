@@ -468,7 +468,7 @@ def aggregate_metrics(metrics, epi_err_thr=5e-4):
     homography_precision = {}
 
     for thr in homography_precision_thresholds:
-        homography_precision.update({f"H_auc@{thr}px": metrics[f"H_auc@{thr}px"]})
+        homography_precision.update({f"H_auc@{thr}px": np.mean(metrics[f"H_auc@{thr}px"])})
 
     # matching precision
     dist_thresholds = [epi_err_thr]
