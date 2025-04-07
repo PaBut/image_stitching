@@ -1,0 +1,33 @@
+import os
+import sys
+import numpy as np
+
+def process_file(filename, base_path):
+    img_count = 0
+    pair_count = 0
+    valid_pair_count = 0
+
+    try:
+        with open(filename, 'r', encoding='utf-8') as file:
+            for line in file:
+                npz = np.load(os.path.join(base_path, line.strip()), allow_pickle=True)
+                images = npz['image_paths']
+                pairs = npz['pair_infos']
+
+                img_count += len(images)
+                pair_count += len(pairs)
+                valid_pair_count += len([pair for pair in pairs if pair[1] > 0.1])
+    except FileNotFoundError:
+        print(f"File '{filename}' not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    print(f"Image count: {img_count}")
+    print(f"Pair count: {pair_count}")
+    print(f"Valid pair count: {valid_pair_count}")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Usage: python script.py <filename.txt> <base_path>")
+    else:
+        process_file(sys.argv[1], sys.argv[2])
