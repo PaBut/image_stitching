@@ -2,6 +2,7 @@ import os.path as osp
 import pdb
 
 import numpy as np
+from numpy.linalg import inv
 import torch
 import torch.nn.functional as F
 from loguru import logger
@@ -125,8 +126,8 @@ class MegaDepthDataset(Dataset):
                            dtype=torch.float).reshape(3, 3)
 
         # read and compute relative poses
-        T0 = self.scene_info['poses'][idx0]
-        T1 = self.scene_info['poses'][idx1]
+        T0 = inv(self.scene_info['poses'][idx0])
+        T1 = inv(self.scene_info['poses'][idx1])
         T_0to1 = torch.tensor(np.matmul(T1, np.linalg.inv(T0)),
                               dtype=torch.float)[:4, :4]  # (4, 4)
         T_1to0 = T_0to1.inverse()
