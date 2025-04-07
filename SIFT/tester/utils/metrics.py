@@ -433,6 +433,9 @@ def compute_homography_errors(pt0, pt1, threshold):
 
     H, _ = cv2.findHomography(pt1, pt0, cv2.RANSAC)
 
+    if H is None:
+        return None
+
     pts2_proj = cv2.perspectiveTransform(pt1.reshape(-1, 1, 2), H).reshape(-1, 2)
     reprojection_error = np.linalg.norm(pt0 - pts2_proj, axis=1)
 
