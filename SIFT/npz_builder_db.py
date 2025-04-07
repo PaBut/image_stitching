@@ -182,11 +182,11 @@ def pair_id_to_image_ids(pair_id):
     image_id1 = (pair_id - image_id2) // 2147483647
     return image_id1, image_id2
 
-def get_keypoints_count(cursor, image_id):
-    """Get the number of keypoints for an image."""
-    cursor.execute("SELECT num_keypoints FROM images WHERE image_id = ?", (image_id,))
-    result = cursor.fetchone()
-    return result[0] if result else 0
+# def get_keypoints_count(cursor, image_id):
+#     """Get the number of keypoints for an image."""
+#     cursor.execute("SELECT num_keypoints FROM images WHERE image_id = ?", (image_id,))
+#     result = cursor.fetchone()
+#     return result[0] if result else 0
 
 def extract_image_pairs_with_overlap(database_path, available_images):
     """Extract matched image pairs with overlapping ratio from COLMAP database."""
@@ -197,18 +197,11 @@ def extract_image_pairs_with_overlap(database_path, available_images):
     pairs_data = cursor.fetchall()
 
     image_pairs_with_overlap = []
-    for pair_id, matches_blob in pairs_data:
+    for pair_id in pairs_data:
         image_id1, image_id2 = pair_id_to_image_ids(pair_id)
         if image_id1 in available_images and image_id2 in available_images:
-            num_matches = int.from_bytes(matches_blob[:4], byteorder='little')
 
-            keypoints1 = get_keypoints_count(cursor, image_id1)
-            keypoints2 = get_keypoints_count(cursor, image_id2)
-
-            min_keypoints = min(keypoints1, keypoints2)
-            overlap_ratio = num_matches / min_keypoints if min_keypoints > 0 else 0
-
-            image_pairs_with_overlap.append(((image_id1, image_id2), overlap_ratio, []))
+            image_pairs_with_overlap.append(((image_id1, image_id2), 1, []))
 
     conn.close()
     return image_pairs_with_overlap
