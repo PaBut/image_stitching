@@ -427,7 +427,7 @@ def compute_homography_errors(pt0, pt1, threshold):
         pt1 (torch.Tensor): [N, 2]
     """
     if(len(pt0) < 4):
-        return {"auc": 0}
+        return None
     
     pt0 = np.array(pt0.cpu())
     pt1 = np.array(pt1.cpu())
