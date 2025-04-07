@@ -428,8 +428,8 @@ def compute_homography_errors(pt0, pt1, threshold):
     if(len(pt0) < 4):
         return None
     
-    pt0 = np.array(pt0.cpu())
-    pt1 = np.array(pt1.cpu())
+    pt0 = np.array(pt0.cpu(), dtype=np.float32)
+    pt1 = np.array(pt1.cpu(), dtype=np.float32)
 
     H, _ = cv2.findHomography(pt1, pt0, cv2.RANSAC)
 
