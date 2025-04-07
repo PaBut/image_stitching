@@ -67,8 +67,8 @@ class FeatureDetectorMatchFinder(MatchFinder):
         else:
             raise Exception('Not supported')
     def find_matches(self, img1, img2):
-        img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
-        img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+        img1 = img1.astype(np.uint8)
+        img2 = img2.astype(np.uint8)
         keypoints1, descriptors1 = self.detector.detectAndCompute(img1, None)
         keypoints2, descriptors2 = self.detector.detectAndCompute(img2, None)
 
