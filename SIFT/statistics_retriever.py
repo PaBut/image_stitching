@@ -16,6 +16,7 @@ def process_file(filename, base_path):
                     continue
                 npz = np.load(npz_path, allow_pickle=True)
                 images = npz['image_paths']
+                images = images[images != None]
                 pairs = npz['pair_infos']
 
                 img_count += len(images)
