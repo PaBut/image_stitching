@@ -80,7 +80,7 @@ class PL_Tester(pl.LightningModule):
                 "inliers": batch["inliers"],
             }
             for thr in homography_precision_thr:
-                metrics[f"H_auc@{thr}px"] = batch[f"H_auc@{thr}px"]
+                metrics[f"H_auc@{thr}px"] = [batch[f"H_auc@{thr}px"]]
             
             ret_dict = {"metrics": metrics}
         return ret_dict, rel_pair_names
