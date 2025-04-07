@@ -393,6 +393,51 @@ def epidist_prec(errors, thresholds, ret_dict=False):
         return {f"prec@{t:.0e}": prec for t, prec in zip(thresholds, precs)}
     else:
         return precs
+    
+
+def compute_homography_precision(data, thresholds): 
+    Tx = numeric.cross_product_matrix(data["T_0to1"][:, :3, 3])
+
+    m_bids = data["m_bids"]
+    pts0 = data["mkpts0_f"]
+    pts1 = data["mkpts1_f"]
+    precisions = {}
+
+    for bs in range(Tx.size(0)):
+        mask = m_bids == bs
+
+        for t in thresholds:
+            precision = compute_homography_errors(
+                pts0[mask], pts1[mask], t
+            )
+
+            precisions.update({f"H_auc@{t}px": precision if precision != None else 0})
+
+    for t in thresholds:
+        precision = precisions[f"H_auc@{t}px"]
+        precision = precision / Tx.size(0)
+        data.update({f"H_auc@{t}px": precision})    
+
+def compute_homography_errors(pt0, pt1, threshold):
+    """Compute homography errors.
+
+    Args:
+        pt0 (torch.Tensor): [N, 2]
+        pt1 (torch.Tensor): [N, 2]
+    """
+    if(len(pt0) < 4):
+        return {"auc": 0}
+    
+    pt0 = np.array(pt0)
+    pt1 = np.array(pt1)
+
+    H, _ = cv2.findHomography(pt1, pt0, cv2.RANSAC)
+
+    pts2_proj = cv2.perspectiveTransform(pt1.reshape(-1, 1, 2), H).reshape(-1, 2)
+    reprojection_error = np.linalg.norm(pt0 - pts2_proj, axis=1)
+
+    inliers_ratio = np.mean(reprojection_error <= threshold)
+    return inliers_ratio
 
 
 def aggregate_metrics(metrics, epi_err_thr=5e-4):
@@ -419,11 +464,17 @@ def aggregate_metrics(metrics, epi_err_thr=5e-4):
     ]
     aucs = error_auc(pose_errors, angular_thresholds)  # (auc@5, auc@10, auc@20)
 
+    homography_precision_thresholds = [3, 5, 10]
+    homography_precision = {}
+
+    for thr in homography_precision_thresholds:
+        homography_precision.update({f"H_auc@{thr}px": metrics[f"H_auc@{thr}px"]})
+
     # matching precision
     dist_thresholds = [epi_err_thr]
     precs = epidist_prec(
         np.array(metrics["epi_errs"], dtype=object)[unq_ids], dist_thresholds, True
     )  # (prec@err_thr)
 
-    return {**aucs, **precs}
+    return {**aucs, **precs, **homography_precision}
     # return {**aucs, **precs, **fp_miss_rates}

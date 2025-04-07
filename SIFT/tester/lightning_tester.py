@@ -17,7 +17,7 @@ from loguru import logger
 
 from enums import EnvironmentType
 from match_finders import AdaMatcherMatchFinder, FeatureDetector, FeatureDetectorMatchFinder, LoFTRMatchFinder, Matcher
-from tester.utils.metrics import aggregate_metrics, compute_pose_errors, compute_symmetrical_epipolar_errors
+from tester.utils.metrics import aggregate_metrics, compute_homography_precision, compute_pose_errors, compute_symmetrical_epipolar_errors
 from tester.utils.misc import flattenList, lower_config
 from tester.utils.profiler import PassThroughProfiler
 
@@ -62,6 +62,8 @@ class PL_Tester(pl.LightningModule):
             compute_pose_errors(
                 batch, self.config
             )  # compute R_errs, t_errs, pose_errs for each pair
+            homography_precision_thr = [3, 5, 10]
+            compute_homography_precision(batch, homography_precision_thr)
             # compute_coarse_error(batch)
 
             rel_pair_names = list(zip(*batch["pair_names"]))
@@ -77,6 +79,9 @@ class PL_Tester(pl.LightningModule):
                 "t_errs": batch["t_errs"],
                 "inliers": batch["inliers"],
             }
+            for thr in homography_precision_thr:
+                metrics[f"H_auc@{thr}px"] = batch[f"H_auc@{thr}px"]
+            
             ret_dict = {"metrics": metrics}
         return ret_dict, rel_pair_names
 
