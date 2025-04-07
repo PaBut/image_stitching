@@ -12,6 +12,34 @@ from tester.utils.dataset import (read_megadepth_color, read_megadepth_depth,
                                read_megadepth_gray, read_scannet_color)
 
 
+def inverse_pose_matrix(pose_matrix):
+    """
+    Compute the inverse of a 4x4 pose matrix of the form [R | t; 0 1].
+    
+    Args:
+        pose_matrix (np.ndarray): A 4x4 pose matrix with shape (4, 4).
+    
+    Returns:
+        np.ndarray: The inverse 4x4 pose matrix.
+    """
+    if pose_matrix.shape != (4, 4):
+        raise ValueError("Input matrix must be 4x4")
+    
+    if not np.allclose(pose_matrix[3, :], [0, 0, 0, 1]):
+        raise ValueError("Bottom row of the pose matrix must be [0, 0, 0, 1]")
+    
+    R = pose_matrix[:3, :3]
+    t = pose_matrix[:3, 3]
+    
+    R_T = R.T
+    t_new = -R_T @ t
+    
+    inverse_matrix = np.eye(4)
+    inverse_matrix[:3, :3] = R_T
+    inverse_matrix[:3, 3] = t_new
+    
+    return inverse_matrix
+
 class MegaDepthDataset(Dataset):
     def __init__(self,
                  root_dir,
@@ -126,8 +154,8 @@ class MegaDepthDataset(Dataset):
                            dtype=torch.float).reshape(3, 3)
 
         # read and compute relative poses
-        T0 = inv(self.scene_info['poses'][idx0])
-        T1 = inv(self.scene_info['poses'][idx1])
+        T0 = inverse_pose_matrix(self.scene_info['poses'][idx0])
+        T1 = inverse_pose_matrix(self.scene_info['poses'][idx1])
         T_0to1 = torch.tensor(np.matmul(T1, np.linalg.inv(T0)),
                               dtype=torch.float)[:4, :4]  # (4, 4)
         T_1to0 = T_0to1.inverse()
