@@ -43,10 +43,10 @@ class MegaDepthDataset(Dataset):
         self.scene_id = npz_path.split('.')[0]
         # prepare scene_info and pair_info
         # pdb.set_trace()
-        if mode == 'test' and min_overlap_score != 0:
-            logger.warning(
-                'You are using `min_overlap_score`!=0 in test mode. Set to 0.')
-            min_overlap_score = 0
+        # if mode == 'test' and min_overlap_score != 0:
+        #     logger.warning(
+        #         'You are using `min_overlap_score`!=0 in test mode. Set to 0.')
+        #     min_overlap_score = 0
 
         self.scene_info = dict(np.load(npz_path, allow_pickle=True))
         self.pair_infos = self.scene_info['pair_infos'].copy()
