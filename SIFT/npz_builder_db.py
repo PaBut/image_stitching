@@ -193,7 +193,7 @@ def extract_image_pairs_with_overlap(database_path, available_images):
     conn = sqlite3.connect(database_path)
     cursor = conn.cursor()
 
-    cursor.execute("SELECT pair_id, matches FROM two_view_geometries")
+    cursor.execute("SELECT pair_id FROM two_view_geometries")
     pairs_data = cursor.fetchall()
 
     image_pairs_with_overlap = []
