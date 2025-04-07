@@ -198,8 +198,7 @@ def extract_image_pairs_with_overlap(database_path, available_images):
 
     image_pairs_with_overlap = []
     for pair_id in pairs_data:
-        print(pair_id)
-        image_id1, image_id2 = pair_id_to_image_ids(pair_id)
+        image_id1, image_id2 = pair_id_to_image_ids(pair_id[0])
         if image_id1 in available_images and image_id2 in available_images:
 
             image_pairs_with_overlap.append(((image_id1, image_id2), 1, []))
