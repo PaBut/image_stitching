@@ -22,6 +22,11 @@ def process_file(filename, base_path):
                 img_count += len(images)
                 pair_count += len(pairs)
                 valid_pair_count += len([pair for pair in pairs if pair[1] > 0.1])
+
+                print(f"Processing {npz_path}:")
+                print(f"  Image count: {len(images)}")
+                print(f"  Pair count: {len(pairs)}")
+                print(f"  Valid pair count: {len([pair for pair in pairs if pair[1] > 0.1])}")
     except Exception as e:
         print(f"An error occurred: {e}")
 
