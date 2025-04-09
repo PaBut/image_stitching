@@ -23,7 +23,7 @@ while IFS= read -r scene_name; do
         fi
 
         mkdir -p "$output_directory/$scene_name"
-        mkdir -p "$input_path/sparse/txt"
+        mkdir -p "$input_path/dense/sparse/txt"
         echo "Processing scene: $scene_name"
         colmap model_converter \
             --input_path $input_path/dense/sparse \
