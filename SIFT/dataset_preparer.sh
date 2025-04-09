@@ -26,16 +26,16 @@ while IFS= read -r scene_name; do
         mkdir -p "$input_path/sparse/txt"
         echo "Processing scene: $scene_name"
         colmap model_converter \
-            --input_path $input_path/sparse \
-            --output_path $input_path/sparse/txt \
+            --input_path $input_path/dense/sparse \
+            --output_path $input_path/dense/sparse/txt \
             --output_type TXT
         cp "$input_path/dense/images" "$output_directory/$scene_name/images" -r
         cp "$input_path/dense/stereo/depth_maps" "$output_directory/$scene_name/depth_maps" -r
-        python3 npz_builder_db.py --output "$output_directory/$scene_name.npz" \
-                                --cameras_path "$input_path/sparse/txt/cameras.txt" \
-                                --images_path "$input_path/sparse/txt/images.txt" \
-                                --db_path "$input_path/sparse/database.db"
-                                # --points3D_path "$input_path/sparse/txt/points3D.txt" 
+        python3 npz_builder.py --output "$output_directory/$scene_name.npz" \
+                                --cameras_path "$input_path/dense/sparse/txt/cameras.txt" \
+                                --images_path "$input_path/dense/sparse/txt/images.txt" \
+                                --points3D_path "$input_path/dense/sparse/txt/points3D.txt" 
+                                # --db_path "$input_path/sparse/database.db"
 
     fi
 done < "$scene_list"
