@@ -6,6 +6,7 @@ import subprocess
 # import time
 from collections import defaultdict
 from pathlib import Path
+import time
 from typing import Literal
 
 import numpy as np
@@ -78,6 +79,8 @@ class PL_Tester(pl.LightningModule):
                 "R_errs": batch["R_errs"],
                 "t_errs": batch["t_errs"],
                 "inliers": batch["inliers"],
+                "elapsed_time": batch["elapsed_time"],
+                "match_count": batch["mkpts0_f"].shape[0]
             }
             for thr in homography_precision_thr:
                 metrics[f"H_auc@{thr}px"] = [batch[f"H_auc@{thr}px"]]
@@ -89,11 +92,14 @@ class PL_Tester(pl.LightningModule):
         # with self.profiler.profile("AdaMatcher"):
         img0 = batch["image0"].permute(0, 2, 3, 1).cpu().numpy() * 255
         img1 = batch["image1"].permute(0, 2, 3, 1).cpu().numpy() * 255
+        start = time.perf_counter()
         k1, k2 = self.matcher.find_matches(img0[0], img1[0])
+        end = time.perf_counter()
         logger.info(f"keypoints shape: {k1.shape}, {k2.shape}")
         batch["mkpts0_f"] = torch.from_numpy(k1).cuda().float()#.unsqueeze(0)
         batch["mkpts1_f"] = torch.from_numpy(k2).cuda().float()#.unsqueeze(0)
         batch["m_bids"] = torch.zeros(k1.shape[0], dtype=torch.long)
+        batch["elapsed_time"] = (end - start) * 1000
 
         ret_dict, rel_pair_names = self._compute_metrics(batch)
         # self.metric_time += time.monotonic() - t1
