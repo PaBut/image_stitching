@@ -79,8 +79,8 @@ class PL_Tester(pl.LightningModule):
                 "R_errs": batch["R_errs"],
                 "t_errs": batch["t_errs"],
                 "inliers": batch["inliers"],
-                "elapsed_time": batch["elapsed_time"],
-                "match_count": batch["mkpts0_f"].shape[0]
+                "elapsed_time": [batch["elapsed_time"]],
+                "match_count": [batch["mkpts0_f"].shape[0]]
             }
             for thr in homography_precision_thr:
                 metrics[f"H_auc@{thr}px"] = [batch[f"H_auc@{thr}px"]]
