@@ -12,30 +12,36 @@ class CompositionModule(ABC):
     def composite(self, src: Mat, src_mask: Mat, dst: Mat, dst_mask: Mat) -> tuple[Mat, Mat, Mat]:
         pass
 
+def min(a, b):
+    if a < b:
+        return a
+    return b
+
+def max(a, b):
+    if a > b:
+        return a
+    return b
+
 class UdisCompositionModule(CompositionModule):
     MODEL_DIR = './tools/UDIS2/Composition/model'
+    MIN_DIM_SIZE=408
     def preprocessData(self, src: Mat, dst: Mat, src_mask: Mat, dst_mask: Mat):
-        # load image1
         warp1 = src.astype(dtype=np.float32)
         warp1 = (warp1 / 127.5) - 1.0
         warp1 = np.transpose(warp1, [2, 0, 1])
 
-        # load image2
         warp2 = dst.astype(dtype=np.float32)
         warp2 = (warp2 / 127.5) - 1.0
         warp2 = np.transpose(warp2, [2, 0, 1])
 
-        # load mask1
         mask1 = src_mask.astype(dtype=np.float32)
         mask1 = mask1 / 255
         mask1 = np.transpose(mask1, [2, 0, 1])
 
-        # load mask2
         mask2 = dst_mask.astype(dtype=np.float32)
         mask2 = mask2 / 255
         mask2 = np.transpose(mask2, [2, 0, 1])
 
-        # convert to tensor
         warp1_tensor = torch.tensor(warp1).unsqueeze(0)
         warp2_tensor = torch.tensor(warp2).unsqueeze(0)
         mask1_tensor = torch.tensor(mask1).unsqueeze(0)
@@ -63,8 +69,28 @@ class UdisCompositionModule(CompositionModule):
         else:
             print('No checkpoint found!')
             return
+        
+        h, w, _ = src.shape
+        src_copy = np.copy(src)
+        src_mask_copy = np.copy(src_mask)
+        dst_copy = np.copy(dst)
+        dst_mask_copy = np.copy(dst_mask)
 
-        src_tensor, dst_tensor, src_mask_tensor, dst_mask_tensor = self.preprocessData(src, dst, src_mask, dst_mask)
+        resize_flag = min(h, w) < self.MIN_DIM_SIZE
+
+        if resize_flag:
+            print('resized')
+            resize = max(self.MIN_DIM_SIZE / w, self.MIN_DIM_SIZE / h)
+
+            new_h, new_w = int(h * resize), int(w * resize)
+
+            src_copy = cv2.resize(src_copy, (new_w, new_h))
+            src_mask_copy = cv2.resize(src_mask_copy, (new_w, new_h))
+            dst_copy = cv2.resize(dst_copy, (new_w, new_h))
+            dst_mask_copy = cv2.resize(dst_mask_copy, (new_w, new_h))
+            print(src_copy.shape)
+
+        src_tensor, dst_tensor, src_mask_tensor, dst_mask_tensor = self.preprocessData(src_copy, dst_copy, src_mask_copy, dst_mask_copy)
         
         if torch.cuda.is_available():
             src_tensor = src_tensor.cuda()
@@ -91,6 +117,11 @@ class UdisCompositionModule(CompositionModule):
         stitched_image = ((stitched_image[0]+1)*127.5).cpu().detach().numpy().transpose(1,2,0)
         learned_mask1 = (learned_mask1[0]*255).cpu().detach().numpy().transpose(1,2,0)
         learned_mask2 = (learned_mask2[0]*255).cpu().detach().numpy().transpose(1,2,0)
+
+        if resize_flag:
+            stitched_image = cv2.resize(stitched_image, (w, h))
+            learned_mask1 = cv2.resize(learned_mask1, (w, h))
+            learned_mask2 = cv2.resize(learned_mask2, (w, h))
 
         return stitched_image, learned_mask1, learned_mask2
     
