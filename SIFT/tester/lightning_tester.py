@@ -117,7 +117,7 @@ class PL_Tester(pl.LightningModule):
                     item["identifier"] = "#".join(rel_pair_names[b_id])
                     for key in keys_to_save:
                         if "classification" not in key:
-                            item[key] = batch[key][mask].cpu().numpy()
+                            item[key] = batch[key].cpu().numpy()
                         else:
                             item[key] = batch[key][b_id].cpu().numpy()
                     for key in [
