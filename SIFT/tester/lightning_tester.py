@@ -74,8 +74,7 @@ class PL_Tester(pl.LightningModule):
                 # to filter duplicate pairs caused by DistributedSampler
                 "identifiers": ["#".join(rel_pair_names[b]) for b in range(bs)],
                 "epi_errs": [
-                    batch["epi_errs"][batch["m_bids"] == b].cpu().numpy()
-                    for b in range(bs)
+                    batch["epi_errs"].cpu().numpy()
                 ],
                 "R_errs": batch["R_errs"],
                 "t_errs": batch["t_errs"],
