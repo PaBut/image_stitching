@@ -73,7 +73,8 @@ class PL_Tester(pl.LightningModule):
                 # to filter duplicate pairs caused by DistributedSampler
                 "identifiers": ["#".join(rel_pair_names[b]) for b in range(bs)],
                 "epi_errs": [
-                    batch["epi_errs"].cpu().numpy()
+                    batch["epi_errs"][batch["m_bids"] == b].cpu().numpy()
+                    for b in range(bs)
                 ],
                 "R_errs": batch["R_errs"],
                 "t_errs": batch["t_errs"],
@@ -97,7 +98,7 @@ class PL_Tester(pl.LightningModule):
         logger.info(f"keypoints shape: {k1.shape}, {k2.shape}")
         batch["mkpts0_f"] = torch.from_numpy(k1).cuda().float()#.unsqueeze(0)
         batch["mkpts1_f"] = torch.from_numpy(k2).cuda().float()#.unsqueeze(0)
-        batch["m_bids"] = torch.ones(k1.shape[0], dtype=torch.long)
+        batch["m_bids"] = torch.zeros(k1.shape[0], dtype=torch.long)
         batch["elapsed_time"] = (end - start) * 1000
 
         ret_dict, rel_pair_names = self._compute_metrics(batch)
@@ -112,12 +113,12 @@ class PL_Tester(pl.LightningModule):
                 dumps = []
                 for b_id in range(bs):
                     item = {}
-                    mask = 0
+                    mask = batch["m_bids"] == b_id
                     item["pair_names"] = pair_names[b_id]
                     item["identifier"] = "#".join(rel_pair_names[b_id])
                     for key in keys_to_save:
                         if "classification" not in key:
-                            item[key] = batch[key].cpu().numpy()
+                            item[key] = batch[key][mask].cpu().numpy()
                         else:
                             item[key] = batch[key][b_id].cpu().numpy()
                     for key in [

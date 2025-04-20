@@ -125,6 +125,7 @@ def compute_symmetrical_epipolar_errors(data):
     epi_errs = []
     for bs in range(Tx.size(0)):
         mask = m_bids == bs
+        logger.info(f"{pts0[mask].shape}")
         epi_errs.append(
             symmetric_epipolar_distance(
                 pts0[mask], pts1[mask], E_mat[bs], data["K0"][bs], data["K1"][bs]
