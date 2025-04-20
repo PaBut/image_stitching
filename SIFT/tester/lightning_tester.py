@@ -69,6 +69,7 @@ class PL_Tester(pl.LightningModule):
 
             rel_pair_names = list(zip(*batch["pair_names"]))
             bs = batch["image0"].size(0)
+            logger.info(f"bs: {bs}")
             metrics = {
                 # to filter duplicate pairs caused by DistributedSampler
                 "identifiers": ["#".join(rel_pair_names[b]) for b in range(bs)],
