@@ -69,7 +69,6 @@ class PL_Tester(pl.LightningModule):
 
             rel_pair_names = list(zip(*batch["pair_names"]))
             bs = batch["image0"].size(0)
-            logger.info(f"bs: {bs}")
             metrics = {
                 # to filter duplicate pairs caused by DistributedSampler
                 "identifiers": ["#".join(rel_pair_names[b]) for b in range(bs)],
@@ -111,23 +110,23 @@ class PL_Tester(pl.LightningModule):
                 pair_names = list(zip(*batch["pair_names"]))
                 bs = batch["image0"].shape[0]
                 dumps = []
-                for b_id in range(bs):
-                    item = {}
-                    mask = batch["m_bids"] == b_id
-                    item["pair_names"] = pair_names[b_id]
-                    item["identifier"] = "#".join(rel_pair_names[b_id])
-                    for key in keys_to_save:
-                        if "classification" not in key:
-                            item[key] = batch[key][mask].cpu().numpy()
-                        else:
-                            item[key] = batch[key][b_id].cpu().numpy()
-                    for key in [
-                        "R_errs",
-                        "t_errs",
-                        "inliers",
-                    ]:  # 'fp_scores', 'miss_scores']:
-                        item[key] = batch[key][b_id]
-                    dumps.append(item)
+                # for b_id in range(bs):
+                item = {}
+                # mask = batch["m_bids"] == b_id
+                item["pair_names"] = pair_names
+                item["identifier"] = "#".join(rel_pair_names)
+                for key in keys_to_save:
+                    if "classification" not in key:
+                        item[key] = batch[key].cpu().numpy()
+                    else:
+                        item[key] = batch[key].cpu().numpy()
+                for key in [
+                    "R_errs",
+                    "t_errs",
+                    "inliers",
+                ]:  # 'fp_scores', 'miss_scores']:
+                    item[key] = batch[key]
+                dumps.append(item)
                 ret_dict["dumps"] = dumps
 
         self.test_step_outputs.append(ret_dict)
