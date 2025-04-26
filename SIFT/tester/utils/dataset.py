@@ -188,10 +188,11 @@ def read_megadepth_color(path,
         image, mask = pad_bottom_right(image, pad_to, ret_mask=True)
     else:
         mask = None
+        image = np.transpose(image, (2, 0, 1))
 
     image = (torch.from_numpy(image).float() / 255
              )  # (3, h, w) -> (3, h, w) and normalized
-    mask = torch.from_numpy(mask)
+    mask = torch.from_numpy(mask) if mask is not None else None
 
     return image, mask, scale, scale_wh
 
