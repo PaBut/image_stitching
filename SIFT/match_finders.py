@@ -211,16 +211,7 @@ class AdaMatcherMatchFinder(MatchFinder):
             weights_path = pretrained_ckpt
         state_dict = torch.load(weights_path, weights_only=True)["state_dict"]
         
-        new_state_dict = {}
-        prefix = 'matcher.'
-        for key, value in state_dict.items():
-            if key.startswith(prefix):
-                new_key = key[len(prefix):]
-                new_state_dict[new_key] = value
-            else:
-                new_state_dict[key] = value
-        
-        self.model.load_state_dict(new_state_dict)
+        self.model.load_state_dict(state_dict)
         self.model = self.model.eval().cuda()
 
     def find_matches(self, img1, img2):
