@@ -96,12 +96,12 @@ class FeatureDetectorWarper(Warper):
     
 
 class DetectorFreeWarper(Warper):
-    def __init__(self, model: DetectorFreeModel, model_type: EnvironmentType | None):
+    def __init__(self, model: DetectorFreeModel, model_type: EnvironmentType | None = None, model_path: str | None = None):
         if model == DetectorFreeModel.LoFTR:
             if model_type == None:
                 raise Exception("Model type needs to be provided")
-            self.matcher = LoFTRMatchFinder(model_type)
+            self.matcher = LoFTRMatchFinder(model_type, model_path)
         if model == DetectorFreeModel.AdaMatcher:
-            self.matcher = AdaMatcherMatchFinder()
+            self.matcher = AdaMatcherMatchFinder(model_path)
         self.warp_module = SingleWarpModule()
         super().__init__()
