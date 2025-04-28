@@ -101,6 +101,8 @@ class LoFTRMatchFinder(MatchFinder):
     FIXED_WIDTH = 640
     def __init__(self, loftr_type: EnvironmentType, pretrained_ckpt=None):
         _default_cfg = deepcopy(default_cfg)
+        print(_default_cfg)
+        self.DF = _default_cfg['resolution'][0]
         if loftr_type == EnvironmentType.Indoor:
             _default_cfg['coarse']['temp_bug_fix'] = True  # set to False when using the old ckpt
             _default_cfg['match_coarse']['match_type'] = 'dual_softmax'
@@ -115,23 +117,17 @@ class LoFTRMatchFinder(MatchFinder):
         matcher.load_state_dict(torch.load(weights_path)['state_dict'])
         self.matcher = matcher.eval().cuda()
     def find_matches(self, img0, img1):
-        # size_difference = img0.shape[1] / self.FIXED_WIDTH
-        # new_height = int(img0.shape[0] / size_difference)
-        # input1 = cv2.resize(np.copy(img0), (self.FIXED_WIDTH, new_height))
-        # input2 = cv2.resize(np.copy(img1), (self.FIXED_WIDTH, new_height))
-        input1 = np.copy(img0)
-        input2 = np.copy(img1)
-        size_difference = 1
-        print(f"input1 shape: {input1.shape}, input2 shape: {input2.shape}")
-        img1_torch = torch.from_numpy(cv2.cvtColor(input1, cv2.COLOR_RGB2GRAY))[None][None].cuda() / 255.
-        img2_torch = torch.from_numpy(cv2.cvtColor(input2, cv2.COLOR_RGB2GRAY))[None][None].cuda() / 255.
+        input0, resize0 = prepare_image(img0, self.DF)
+        input1, resize1 = prepare_image(img1, self.DF)
+        img1_torch = torch.from_numpy(cv2.cvtColor(input0, cv2.COLOR_RGB2GRAY))[None][None].cuda() / 255.
+        img2_torch = torch.from_numpy(cv2.cvtColor(input1, cv2.COLOR_RGB2GRAY))[None][None].cuda() / 255.
         batch = {'image0': img1_torch, 'image1': img2_torch}
         with torch.no_grad():
             self.matcher(batch)
             mkpts0 = batch['mkpts0_f'].cpu().numpy()
             mkpts1 = batch['mkpts1_f'].cpu().numpy()
 
-            return mkpts0 * size_difference, mkpts1 * size_difference
+            return mkpts0 * resize0, mkpts1 * resize1
         
 
 class AdaMatcherMatchFinder(MatchFinder):
