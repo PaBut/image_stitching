@@ -4,6 +4,8 @@ from enum import Enum
 from kornia.geometry.epipolar import numeric
 from cv2 import Mat
 import torch
+from pytorch_lightning.callbacks import ModelCheckpoint
+from common import prepare_image
 from enums import EnvironmentType
 from tools.AdaMatcherUtils.adamatcher.utils.cvpr_ds_config import lower_config
 from tools.AdaMatcherUtils.adamatcher.adamatcher import AdaMatcher
@@ -113,10 +115,14 @@ class LoFTRMatchFinder(MatchFinder):
         matcher.load_state_dict(torch.load(weights_path)['state_dict'])
         self.matcher = matcher.eval().cuda()
     def find_matches(self, img0, img1):
-        size_difference = img0.shape[1] / self.FIXED_WIDTH
-        new_height = int(img0.shape[0] / size_difference)
-        input1 = cv2.resize(np.copy(img0), (self.FIXED_WIDTH, new_height))
-        input2 = cv2.resize(np.copy(img1), (self.FIXED_WIDTH, new_height))
+        # size_difference = img0.shape[1] / self.FIXED_WIDTH
+        # new_height = int(img0.shape[0] / size_difference)
+        # input1 = cv2.resize(np.copy(img0), (self.FIXED_WIDTH, new_height))
+        # input2 = cv2.resize(np.copy(img1), (self.FIXED_WIDTH, new_height))
+        input1 = np.copy(img0)
+        input2 = np.copy(img1)
+        size_difference = 1
+        print(f"input1 shape: {input1.shape}, input2 shape: {input2.shape}")
         img1_torch = torch.from_numpy(cv2.cvtColor(input1, cv2.COLOR_RGB2GRAY))[None][None].cuda() / 255.
         img2_torch = torch.from_numpy(cv2.cvtColor(input2, cv2.COLOR_RGB2GRAY))[None][None].cuda() / 255.
         batch = {'image0': img1_torch, 'image1': img2_torch}
@@ -128,77 +134,13 @@ class LoFTRMatchFinder(MatchFinder):
             return mkpts0 * size_difference, mkpts1 * size_difference
         
 
-# class AdaMatcherMatchFinder(MatchFinder):
-#     FIXED_WIDTH = 640
-#     FIXED_DIVISION = 32
-#     WEIGHTS_PATH = r'.\tools\AdaMatcherUtils\weights\adamatcher.ckpt'
-#     def __init__(self, pretrained_ckpt=None):
-#         config = get_cfg_defaults()
-#         # config.merge_from_file(main_config_path)
-#         _config = lower_config(config)
-        
-#         self.model = AdaMatcher(
-#             config = _config["adamatcher"],
-#             training=False
-#         )  
-#         weights_path = self.WEIGHTS_PATH
-#         if pretrained_ckpt is not None:
-#             weights_path = pretrained_ckpt
-#         state_dict = torch.load(weights_path, weights_only=True)["state_dict"]
-        
-#         new_state_dict = {}
-#         prefix = 'matcher.'
-#         for key, value in state_dict.items():
-#             if key.startswith(prefix):
-#                 new_key = key[len(prefix):]
-#                 new_state_dict[new_key] = value
-#             else:
-#                 new_state_dict[key] = value
-        
-#         self.model.load_state_dict(new_state_dict)
-#         self.model = self.model.eval().cuda()
-
-#     def find_matches(self, img1, img2):
-#         # h, w = img1.shape[:2]
-#         # w_difference = w / self.FIXED_WIDTH
-#         # p_height = int(h / w_difference)
-#         # modulo = p_height % self.FIXED_DIVISION
-
-#         # if modulo > self.FIXED_DIVISION / 2:
-#         #     modulo -= self.FIXED_DIVISION
-
-#         # new_height = p_height - modulo
-#         # h_difference = h / new_height
-
-#         # input1 = cv2.resize(np.copy(img1), (self.FIXED_WIDTH, new_height))
-#         # input2 = cv2.resize(np.copy(img2), (self.FIXED_WIDTH, new_height))
-
-#         input1 = np.copy(img1)
-#         input2 = np.copy(img2)
-#         w_difference = 1
-#         h_difference = 1
-
-#         print(input1.shape, input2.shape)
-#         img1_torch = torch.from_numpy(cv2.cvtColor(input1, cv2.COLOR_BGR2RGB).transpose(2, 0, 1))[None].float().cuda() / 255.
-#         img2_torch = torch.from_numpy(cv2.cvtColor(input2, cv2.COLOR_BGR2RGB).transpose(2, 0, 1))[None].float().cuda() / 255.
-#         batch = {'image0': img1_torch, 'image1': img2_torch}
-#         with torch.no_grad():
-#             self.model(batch)
-
-#             # print(batch.keys())
-
-#             pts0 = batch["mkpts0_f"].cpu().numpy()
-#             pts1 = batch["mkpts1_f"].cpu().numpy()
-
-#             return pts0 * np.array([w_difference, h_difference]), pts1 * np.array([w_difference, h_difference])
-        
-
 class AdaMatcherMatchFinder(MatchFinder):
     FIXED_WIDTH = 640
     FIXED_DIVISION = 32
     WEIGHTS_PATH = r'.\tools\AdaMatcherUtils\weights\adamatcher.ckpt'
     def __init__(self, pretrained_ckpt=None):
         config = get_cfg_defaults()
+        self.DF = config.DATASET.MGDPT_DF
         # config.merge_from_file(main_config_path)
         _config = lower_config(config)
         
@@ -224,11 +166,13 @@ class AdaMatcherMatchFinder(MatchFinder):
         self.model = self.model.eval().cuda()
 
     def find_matches(self, img1, img2):
-        input1 = np.copy(img1)
-        input2 = np.copy(img2)
-        
-        img1_torch = torch.from_numpy(cv2.cvtColor(input1, cv2.COLOR_BGR2RGB).transpose(2, 0, 1))[None].float().cuda() / 255.
-        img2_torch = torch.from_numpy(cv2.cvtColor(input2, cv2.COLOR_BGR2RGB).transpose(2, 0, 1))[None].float().cuda() / 255.
+        input1, resize1 = prepare_image(img1, self.DF)
+        input2, resize2 = prepare_image(img2, self.DF)
+
+        img1_torch = torch.from_numpy(cv2.cvtColor(input1, cv2.COLOR_BGR2RGB)
+                                      .transpose(2, 0, 1))[None].float().cuda() / 255.
+        img2_torch = torch.from_numpy(cv2.cvtColor(input2, cv2.COLOR_BGR2RGB)
+                                      .transpose(2, 0, 1))[None].float().cuda() / 255.
         batch = {'image0': img1_torch, 'image1': img2_torch}
         with torch.no_grad():
             self.model(batch)
@@ -236,4 +180,4 @@ class AdaMatcherMatchFinder(MatchFinder):
             pts0 = batch["mkpts0_f"].cpu().numpy()
             pts1 = batch["mkpts1_f"].cpu().numpy()
 
-            return pts0, pts1
+            return pts0 * resize1, pts1 * resize2
