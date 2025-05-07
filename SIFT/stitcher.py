@@ -20,7 +20,7 @@ def parse_args():
     parser.add_argument('img1_path', type=str, help="Path to the first image")
     parser.add_argument('img2_path', type=str, help="Path to the second image")
     parser.add_argument('result_path', type=str, help="Path to the resulting image")
-    parser.add_argument('--ffinder', help="Feature finder method", type=case_insensitive_choices(feature_finder_methods), required=True)
+    parser.add_argument('--mfinder', help="Feature finder method", type=case_insensitive_choices(feature_finder_methods), required=True)
     parser.add_argument('--composition', help="Image composition method", type=case_insensitive_choices(composition_methods), required=True)
     parser.add_argument('--environment', help="Environment type:(indoor or outdoor)", type=case_insensitive_choices(environment_types), default=EnvironmentType.Indoor.name)
 
@@ -29,7 +29,7 @@ def parse_args():
 
 args = parse_args()
 
-detector_type = enum_from_string(args.ffinder, DetectorType)
+detector_type = enum_from_string(args.mfinder, DetectorType)
 composition_type = enum_from_string(args.composition, ComposerType)
 environment_type = enum_from_string(args.environment, EnvironmentType)
 

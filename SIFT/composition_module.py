@@ -65,7 +65,6 @@ class UdisCompositionModule(CompositionModule):
             model_path = ckpt_list[-1]
             checkpoint = torch.load(model_path)
             net.load_state_dict(checkpoint['model'])
-            # print('load model from {}!'.format(model_path))
         else:
             print('No checkpoint found!')
             return
@@ -105,15 +104,6 @@ class UdisCompositionModule(CompositionModule):
         learned_mask1 = batch_out['learned_mask1']
         learned_mask2 = batch_out['learned_mask2']
 
-        # (optional) draw composition images with different colors like our paper
-        s1 = ((src_tensor[0]+1)*127.5 * learned_mask1[0]).cpu().detach().numpy().transpose(1,2,0)
-        s2 = ((dst_tensor[0]+1)*127.5 * learned_mask2[0]).cpu().detach().numpy().transpose(1,2,0)
-        fusion = np.zeros((src_tensor.shape[2],src_tensor.shape[3],3), np.uint8)
-        fusion[...,0] = s2[...,0]
-        fusion[...,1] = s1[...,1]*0.5 +  s2[...,1]*0.5
-        fusion[...,2] = s1[...,2]
-
-        # save learned masks and final composition
         stitched_image = ((stitched_image[0]+1)*127.5).cpu().detach().numpy().transpose(1,2,0)
         learned_mask1 = (learned_mask1[0]*255).cpu().detach().numpy().transpose(1,2,0)
         learned_mask2 = (learned_mask2[0]*255).cpu().detach().numpy().transpose(1,2,0)

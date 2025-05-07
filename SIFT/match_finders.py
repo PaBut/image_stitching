@@ -82,8 +82,6 @@ class FeatureDetectorMatchFinder(MatchFinder):
             if m.distance < 0.75 * n.distance:
                 good_matches.append(m)
 
-        # print('Good matches:', len(good_matches))
-        # if len(good_matches) > self.MIN_MATCH_COUNT:
         src_pts = np.float32([keypoints1[m.trainIdx].pt for m in good_matches])
         dst_pts = np.float32([keypoints2[m.queryIdx].pt for m in good_matches])
 
@@ -91,8 +89,6 @@ class FeatureDetectorMatchFinder(MatchFinder):
             return np.empty((1, 2), dtype=float), np.empty((1, 2), dtype=float)
 
         return src_pts, dst_pts
-        # else:
-        #     return np.empty((1, 2), dtype=float), np.empty((1, 2), dtype=float)
         
 
 class LoFTRMatchFinder(MatchFinder):
@@ -101,8 +97,8 @@ class LoFTRMatchFinder(MatchFinder):
     FIXED_WIDTH = 640
     def __init__(self, loftr_type: EnvironmentType, pretrained_ckpt=None):
         _default_cfg = deepcopy(default_cfg)
-        print(_default_cfg)
         self.DF = _default_cfg['resolution'][0]
+        
         if loftr_type == EnvironmentType.Indoor:
             _default_cfg['coarse']['temp_bug_fix'] = True  # set to False when using the old ckpt
             _default_cfg['match_coarse']['match_type'] = 'dual_softmax'
@@ -111,16 +107,28 @@ class LoFTRMatchFinder(MatchFinder):
             weights_path = self.OUTDOOR_WEIGHTS_PATH
             # _default_cfg['match_coarse']['match_type'] = 'sinkhorn'
             # _default_cfg['match_coarse']['sparse_spvs'] = False
+        
         if pretrained_ckpt is not None:
             weights_path = pretrained_ckpt
+        
         matcher = LoFTR(config=_default_cfg)
         matcher.load_state_dict(torch.load(weights_path)['state_dict'])
-        self.matcher = matcher.eval().cuda()
+        self.matcher = matcher.eval()
+
+        if torch.cuda.is_available():
+            self.matcher = self.matcher.cuda()
+
     def find_matches(self, img0, img1):
         input0, resize0 = prepare_image(img0, self.DF)
         input1, resize1 = prepare_image(img1, self.DF)
-        img1_torch = torch.from_numpy(cv2.cvtColor(input0, cv2.COLOR_RGB2GRAY))[None][None].cuda() / 255.
-        img2_torch = torch.from_numpy(cv2.cvtColor(input1, cv2.COLOR_RGB2GRAY))[None][None].cuda() / 255.
+
+        img1_torch = torch.from_numpy(cv2.cvtColor(input0, cv2.COLOR_RGB2GRAY))[None][None] / 255.
+        img2_torch = torch.from_numpy(cv2.cvtColor(input1, cv2.COLOR_RGB2GRAY))[None][None] / 255.
+
+        if torch.cuda.is_available():
+            img1_torch = img1_torch.cuda()
+            img2_torch = img2_torch.cuda()
+
         batch = {'image0': img1_torch, 'image1': img2_torch}
         with torch.no_grad():
             self.matcher(batch)
@@ -137,7 +145,6 @@ class AdaMatcherMatchFinder(MatchFinder):
     def __init__(self, pretrained_ckpt=None):
         config = get_cfg_defaults()
         self.DF = config.DATASET.MGDPT_DF
-        # config.merge_from_file(main_config_path)
         _config = lower_config(config)
         
         self.model = AdaMatcher(
@@ -159,16 +166,22 @@ class AdaMatcherMatchFinder(MatchFinder):
                 new_state_dict[key] = value
         
         self.model.load_state_dict(new_state_dict)
-        self.model = self.model.eval().cuda()
+        self.model = self.model.eval()
+        if torch.cuda.is_available():
+            self.model = self.model.cuda()
 
     def find_matches(self, img1, img2):
         input1, resize1 = prepare_image(img1, self.DF)
         input2, resize2 = prepare_image(img2, self.DF)
 
         img1_torch = torch.from_numpy(cv2.cvtColor(input1, cv2.COLOR_BGR2RGB)
-                                      .transpose(2, 0, 1))[None].float().cuda() / 255.
+                                      .transpose(2, 0, 1))[None].float() / 255.
         img2_torch = torch.from_numpy(cv2.cvtColor(input2, cv2.COLOR_BGR2RGB)
-                                      .transpose(2, 0, 1))[None].float().cuda() / 255.
+                                      .transpose(2, 0, 1))[None].float() / 255.
+        if torch.cuda.is_available():
+            img1_torch = img1_torch.cuda()
+            img2_torch = img2_torch.cuda()
+
         batch = {'image0': img1_torch, 'image1': img2_torch}
         with torch.no_grad():
             self.model(batch)
