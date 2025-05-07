@@ -1,5 +1,6 @@
 /datasets/*
 !/datasets/data_module.py
+/FirstMetricsResults
 /Experiment*
 *.pth
 *.ckpt
