@@ -1,4 +1,6 @@
-SIFT/datasets
+/datasets/*
+!/datasets/data_module.py
+/Experiment*
 *.pth
 *.ckpt
 **/__pycache__/*
