@@ -1,6 +1,5 @@
 name: image_stitching
 channels:
-  - https://dx-mirrors.sensetime.com/anaconda/cloud/pytorch
   - pytorch
   - conda-forge
   - defaults
