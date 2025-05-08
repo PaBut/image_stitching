@@ -1,4 +1,4 @@
-from tester.configs.base import cfg
+from testing.configs.base import cfg
 
 
 TEST_BASE_PATH = "data/WalkDepth2"

@@ -10,7 +10,7 @@ cd $PROJECT_DIR
 model_type=$1
 pretrained_model_path=$2
 
-data_cfg_path="tester/configs/walkdepth_test_config.py"
+data_cfg_path="testing/configs/walkdepth_test_config.py"
 
 dump_dir="dump/loftr_ds_outdoor"
 profiler_name="inference"

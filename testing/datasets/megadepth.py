@@ -8,7 +8,7 @@ import torch.nn.functional as F
 from loguru import logger
 from torch.utils.data import Dataset
 
-from tester.utils.dataset import (read_megadepth_color, read_megadepth_depth,
+from testing.utils.dataset import (read_megadepth_color, read_megadepth_depth,
                                read_megadepth_gray, read_scannet_color)
 
 

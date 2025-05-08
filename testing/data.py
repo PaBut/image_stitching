@@ -13,13 +13,13 @@ from torch.utils.data import (ConcatDataset, DataLoader, Dataset,
 from torch.utils.data.dataset import Dataset
 from tqdm import tqdm
 
-from tester.datasets.megadepth import MegaDepthDataset
+from testing.datasets.megadepth import MegaDepthDataset
 # from src.datasets.scannet import ScanNetDataset
 # from src.datasets.walk.walk import WALKDataset
-from tester.utils import comm
-from tester.utils.augment import build_augmentor
-from tester.utils.dataloader import get_local_split
-from tester.utils.misc import tqdm_joblib
+from testing.utils import comm
+from testing.utils.augment import build_augmentor
+from testing.utils.dataloader import get_local_split
+from testing.utils.misc import tqdm_joblib
 
 
 class MultiSceneDataModule(pl.LightningDataModule):

@@ -12,7 +12,7 @@ pretrained_model_path=$2
 index=$3
 figure_path=$4
 
-data_cfg_path="tester/configs/walkdepth_test_config.py"
+data_cfg_path="testing/configs/walkdepth_test_config.py"
 
 CUDA_VISIBLE_DEVICES=0 python3 -u ./testing/test_plot.py \
     ${data_cfg_path} \
