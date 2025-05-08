@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 from abc import ABC, abstractmethod
 import torch
-from tools.UDIS2.Composition.network import Network, build_model
+from pipeline.Modules.tools.UDIS2.Composition.network import Network, build_model
 
 class CompositionModule(ABC):
     @abstractmethod
