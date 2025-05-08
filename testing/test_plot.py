@@ -2,18 +2,15 @@ import argparse
 import itertools
 import pprint
 
-import pytorch_lightning as pl
 from loguru import logger as loguru_logger
 import torch
 
-from Pipeline.enums import EnvironmentType
-from Pipeline.Modules.match_finders import AdaMatcherMatchFinder, FeatureDetector, FeatureDetectorMatchFinder, LoFTRMatchFinder
-from tester.utils.metrics import compute_symmetrical_epipolar_errors
-from tester.utils.plotting import make_matching_figures
-from Pipeline.Modules.tools.AdaMatcherUtils.config.default import get_cfg_defaults
-from tester.data import MultiSceneDataModule
-from tester.lightning_tester import PL_Tester
-from tester.utils.profiler import build_profiler
+from pipeline.enums import EnvironmentType
+from pipeline.Modules.match_finders import AdaMatcherMatchFinder, FeatureDetector, FeatureDetectorMatchFinder, LoFTRMatchFinder
+from testing.utils.metrics import compute_symmetrical_epipolar_errors
+from testing.utils.plotting import make_matching_figures
+from pipeline.Modules.tools.AdaMatcherUtils.config.default import get_cfg_defaults
+from testing.data import MultiSceneDataModule
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -54,9 +51,7 @@ if __name__ == '__main__':
     data_module.setup(stage='test')
     for batch in itertools.islice(data_module.test_dataloader(), args.index, None):
         break
-    # batch = data_module.test_dataloader()._get_iterator()[0]
 
-        # Matcher: AdaMatcher
     if args.model_type == "sift":
         matcher = FeatureDetectorMatchFinder(FeatureDetector.SIFT)
     elif args.model_type == "loftr":

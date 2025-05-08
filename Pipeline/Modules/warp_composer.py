@@ -10,7 +10,7 @@ import torchvision.transforms as T
 
 resize_512 = T.Resize((512,512))
 
-from Pipeline.enums import EnvironmentType
+from pipeline.enums import EnvironmentType
 from warp_module import SingleWarpModule, WarpModule
 from match_finders import AdaMatcherMatchFinder, FeatureDetector, FeatureDetectorMatchFinder, LoFTRMatchFinder, MatchFinder
 from tools.UDIS2.Warp.network import Network, build_new_ft_model, get_stitched_result

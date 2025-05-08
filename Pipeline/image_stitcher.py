@@ -3,7 +3,7 @@ import time
 
 from cv2 import Mat
 
-from Pipeline.enums import EnvironmentType
+from pipeline.enums import EnvironmentType
 from Modules.match_finders import FeatureDetector
 from Modules.warp_composer import DetectorFreeModel, DetectorFreeWarper, FeatureDetectorWarper, UDIS2Warper, Warper
 from Modules.composition_module import AlphaCompositionModule, ComplexAlphaCompositionModule, CompositionModule, SimpleCompositionModule, UdisCompositionModule

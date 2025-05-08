@@ -5,10 +5,10 @@ import pytorch_lightning as pl
 from loguru import logger as loguru_logger
 import torch
 
-from Pipeline.Modules.tools.AdaMatcherUtils.config.default import get_cfg_defaults
-from tester.data import MultiSceneDataModule
-from tester.lightning_tester import PL_Tester
-from tester.utils.profiler import build_profiler
+from pipeline.Modules.tools.AdaMatcherUtils.config.default import get_cfg_defaults
+from testing.data import MultiSceneDataModule
+from testing.lightning_tester import PL_Tester
+from testing.utils.profiler import build_profiler
 
 from pytorch_lightning.strategies import SingleDeviceStrategy
 

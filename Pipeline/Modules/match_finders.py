@@ -5,8 +5,8 @@ from kornia.geometry.epipolar import numeric
 from cv2 import Mat
 import torch
 from pytorch_lightning.callbacks import ModelCheckpoint
-from Pipeline.common import prepare_image
-from Pipeline.enums import EnvironmentType
+from pipeline.common import prepare_image
+from pipeline.enums import EnvironmentType
 from tools.AdaMatcherUtils.adamatcher.utils.cvpr_ds_config import lower_config
 from tools.AdaMatcherUtils.adamatcher.adamatcher import AdaMatcher
 from tools.AdaMatcherUtils.config.default import get_cfg_defaults

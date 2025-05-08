@@ -16,11 +16,11 @@ import torch
 from einops.einops import rearrange
 from loguru import logger
 
-from Pipeline.enums import EnvironmentType
-from Pipeline.Modules.match_finders import AdaMatcherMatchFinder, FeatureDetector, FeatureDetectorMatchFinder, LoFTRMatchFinder, Matcher
-from tester.utils.metrics import aggregate_metrics, compute_homography_precision, compute_pose_errors, compute_symmetrical_epipolar_errors
-from tester.utils.misc import flattenList, lower_config
-from tester.utils.profiler import PassThroughProfiler
+from pipeline.enums import EnvironmentType
+from pipeline.Modules.match_finders import AdaMatcherMatchFinder, FeatureDetector, FeatureDetectorMatchFinder, LoFTRMatchFinder, Matcher
+from testing.utils.metrics import aggregate_metrics, compute_homography_precision, compute_pose_errors, compute_symmetrical_epipolar_errors
+from testing.utils.misc import flattenList, lower_config
+from testing.utils.profiler import PassThroughProfiler
 
 # from matplotlib import pyplot as plt
 

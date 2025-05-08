@@ -1,7 +1,7 @@
 import cv2
-from Pipeline.common import enum_from_string
-from Pipeline.enums import EnvironmentType
-from Pipeline.image_stitcher import ComposerType, DetectorType, ImageStitcher
+from pipeline.common import enum_from_string
+from pipeline.enums import EnvironmentType
+from pipeline.image_stitcher import ComposerType, DetectorType, ImageStitcher
 import argparse
 
 def case_insensitive_choices(choices):
