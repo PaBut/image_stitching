@@ -9,8 +9,8 @@ from einops.einops import rearrange, repeat
 from kornia.geometry.subpix import dsnt
 from kornia.utils.grid import create_meshgrid
 
-from tools.AdaMatcherUtils.adamatcher.backbone.feature_interaction import FeatureAttention
-from tools.AdaMatcherUtils.utils.plotting import make_matching_fine
+from pipeline.Modules.tools.AdaMatcherUtils.adamatcher.backbone.feature_interaction import FeatureAttention
+from pipeline.Modules.tools.AdaMatcherUtils.utils.plotting import make_matching_fine
 
 # import pdb
 

@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
-import tools.UDIS2.Warp.utils.torch_DLT as torch_DLT
-import tools.UDIS2.Warp.utils.torch_homo_transform as torch_homo_transform
-import tools.UDIS2.Warp.utils.torch_tps_transform as torch_tps_transform
+import pipeline.Modules.tools.UDIS2.Warp.utils.torch_DLT as torch_DLT
+import pipeline.Modules.tools.UDIS2.Warp.utils.torch_homo_transform as torch_homo_transform
+import pipeline.Modules.tools.UDIS2.Warp.utils.torch_tps_transform as torch_tps_transform
 import ssl
 import torch.nn.functional as F
 import cv2
@@ -12,7 +12,7 @@ import torchvision.models as models
 import torchvision.transforms as T
 resize_512 = T.Resize((512,512))
 
-import tools.UDIS2.Warp.grid_res as grid_res
+import pipeline.Modules.tools.UDIS2.Warp.grid_res as grid_res
 grid_h = grid_res.GRID_H
 grid_w = grid_res.GRID_W
 

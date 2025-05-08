@@ -7,7 +7,7 @@ import torch.nn.functional as F
 from einops import rearrange, repeat
 from yacs.config import CfgNode as CN
 
-from tools.AdaMatcherUtils.adamatcher.ada_module.transformer import (
+from pipeline.Modules.tools.AdaMatcherUtils.adamatcher.ada_module.transformer import (
     DecoderLayer,
     EncoderLayer,
     TransformerDecoder,

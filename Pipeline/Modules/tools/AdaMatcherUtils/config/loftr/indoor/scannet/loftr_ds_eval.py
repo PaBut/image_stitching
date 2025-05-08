@@ -8,7 +8,7 @@ caused by tiny result fluctuation of few image pairs. This config set `BORDER_RM
 to be consistent with the results in our paper.
 """
 
-from tools.AdaMatcherUtils.config.default import _CN as cfg
+from pipeline.Modules.tools.AdaMatcherUtils.config.default import _CN as cfg
 
 cfg.ADAMATCHER.MATCH_COARSE.MATCH_TYPE = 'dual_softmax'
 

@@ -1,4 +1,4 @@
-from tools.AdaMatcherUtils.config.default import _CN as cfg
+from pipeline.Modules.tools.AdaMatcherUtils.config.default import _CN as cfg
 
 cfg.ADAMATCHER.RESOLUTION = (16, 8, 2)
 cfg.ADAMATCHER.MATCH_COARSE.MATCH_TYPE = 'dual_softmax'
