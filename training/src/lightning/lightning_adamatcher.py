@@ -30,6 +30,7 @@ from src.utils.plotting import (  # make_matching_figure_color,; make_matching_i
     make_matching_mask,
 )
 from src.utils.profiler import PassThroughProfiler
+from training.src.lightning.lightning_common import compute_step_metrics
 
 # from matplotlib import pyplot as plt
 
@@ -152,32 +153,6 @@ class PL_AdaMatcher(pl.LightningModule):
             # self.loss(batch)
             self.mask_loss(batch)        
 
-    def _compute_metrics(self, batch):
-        with self.profiler.profile("Copmute metrics"):
-            compute_symmetrical_epipolar_errors(
-                batch
-            )  # compute epi_errs for each match
-            compute_pose_errors(
-                batch, self.config
-            )  # compute R_errs, t_errs, pose_errs for each pair
-            # compute_coarse_error(batch)
-
-            rel_pair_names = list(zip(*batch["pair_names"]))
-            bs = batch["image0"].size(0)
-            metrics = {
-                # to filter duplicate pairs caused by DistributedSampler
-                "identifiers": ["#".join(rel_pair_names[b]) for b in range(bs)],
-                "epi_errs": [
-                    batch["epi_errs"][batch["m_bids"] == b].cpu().numpy()
-                    for b in range(bs)
-                ],
-                "R_errs": batch["R_errs"],
-                "t_errs": batch["t_errs"],
-                "inliers": batch["inliers"],
-            }
-            ret_dict = {"metrics": metrics}
-        return ret_dict, rel_pair_names
-
     def training_step(self, batch, batch_idx):
         # pdb.set_trace()
         self._trainval_inference(batch)
@@ -237,7 +212,7 @@ class PL_AdaMatcher(pl.LightningModule):
         # if self.trainer.global_rank == 0 and self.global_step % self.trainer.log_every_n_steps == 0:
         #     for k, v in batch['loss_scalars'].items():
         #         self.log(k, v, prog_bar=True, logger=True, on_step=True, on_epoch=True)
-        ret_dict, _ = self._compute_metrics(batch)
+        ret_dict, _ = compute_step_metrics(batch)
         if 0:
             bs = batch["image0"].shape[0]
             for b_id in range(bs):
@@ -505,7 +480,7 @@ class PL_AdaMatcher(pl.LightningModule):
         # if self.max_memory < tmp_gpu_use:
         #     self.max_memory = tmp_gpu_use
         # t1 = time.monotonic()
-        ret_dict, rel_pair_names = self._compute_metrics(batch)
+        ret_dict, rel_pair_names = compute_step_metrics(batch)
         # self.metric_time += time.monotonic() - t1
 
         with self.profiler.profile("dump_results"):
