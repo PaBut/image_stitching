@@ -479,12 +479,12 @@ def aggregate_metrics(metrics, epi_err_thr=5e-4):
         np.array(metrics["epi_errs"], dtype=object)[unq_ids], dist_thresholds, True
     )  # (prec@err_thr)
 
-    avg_elapsed_time = np.mean(metrics["elapsed_time"])
-    avg_match_count = np.mean(metrics["match_count"])
-
     aggregated_metrics = {**aucs, **precs, **homography_precision}
 
     if "elsapsed_time" in metrics:
+        avg_elapsed_time = np.mean(metrics["elapsed_time"])
+        avg_match_count = np.mean(metrics["match_count"])
+
         aggregated_metrics["elapsed_time"] = avg_elapsed_time
         aggregated_metrics["match_count"] = avg_match_count
 
