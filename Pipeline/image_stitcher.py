@@ -1,12 +1,11 @@
 from enum import Enum
-import time
 
 from cv2 import Mat
 
 from pipeline.enums import EnvironmentType
 from Modules.match_finders import FeatureDetector
 from Modules.warp_composer import DetectorFreeModel, DetectorFreeWarper, FeatureDetectorWarper, UDIS2Warper, Warper
-from Modules.composition_module import AlphaCompositionModule, ComplexAlphaCompositionModule, CompositionModule, SimpleCompositionModule, UdisCompositionModule
+from Modules.composition_module import AlphaCompositionModule, WeightedAlphaCompositionModule, CompositionModule, SimpleCompositionModule, UdisCompositionModule
 
 class DetectorType(Enum):
     ORB = 0
@@ -26,7 +25,7 @@ class ComposerType(Enum):
 class ImageStitcher:
     warper: Warper
     composer: CompositionModule
-    def __init__(self, detector_type: DetectorType, composer_type: ComposerType, environment: EnvironmentType | None = None):
+    def __init__(self, detector_type: DetectorType, composer_type: ComposerType, weights_path: str | None = None, environment: EnvironmentType | None = None):
 
         if (detector_type == DetectorType.ORB or detector_type == DetectorType.AKAZE
             or detector_type == DetectorType.SIFT or detector_type == DetectorType.BRISK):
@@ -34,7 +33,7 @@ class ImageStitcher:
         elif detector_type == DetectorType.LoFTR or detector_type == DetectorType.AdaMatcher:
             if detector_type == DetectorType.LoFTR and environment == None:
                 raise Exception("Environment type msut be provided")
-            self.warper = DetectorFreeWarper(DetectorFreeModel[detector_type.name], environment)
+            self.warper = DetectorFreeWarper(DetectorFreeModel[detector_type.name], environment, weights_path)
         elif detector_type == DetectorType.UDIS2:
             self.warper = UDIS2Warper()
         else:
@@ -45,7 +44,7 @@ class ImageStitcher:
         elif composer_type == ComposerType.SimpleAlpha:
             self.composer = AlphaCompositionModule()
         elif composer_type == ComposerType.ComplexAlpha:
-            self.composer = ComplexAlphaCompositionModule()
+            self.composer = WeightedAlphaCompositionModule()
         elif composer_type == ComposerType.UDIS2:
             self.composer = UdisCompositionModule()
         else:

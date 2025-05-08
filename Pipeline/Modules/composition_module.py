@@ -131,7 +131,7 @@ class AlphaCompositionModule(CompositionModule):
 
         return blended, mask1, mask2
     
-class ComplexAlphaCompositionModule(CompositionModule):
+class WeightedAlphaCompositionModule(CompositionModule):
     def composite(self, src, src_mask, dst, dst_mask):
         common_area = cv2.bitwise_and(src_mask, dst_mask)
 

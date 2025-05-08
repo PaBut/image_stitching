@@ -15,14 +15,13 @@ def case_insensitive_choices(choices):
 def parse_args():
     feature_finder_methods = [method.name.lower() for method in DetectorType]
     composition_methods = [method.name.lower() for method in ComposerType]
-    environment_types = [type.name.lower() for type in EnvironmentType]
-    parser = argparse.ArgumentParser("Image stitcher with different methods")
+    parser = argparse.ArgumentParser("Image stitcher with configurable methods")
     parser.add_argument('img1_path', type=str, help="Path to the first image")
     parser.add_argument('img2_path', type=str, help="Path to the second image")
     parser.add_argument('result_path', type=str, help="Path to the resulting image")
     parser.add_argument('--mfinder', help="Feature finder method", type=case_insensitive_choices(feature_finder_methods), required=True)
     parser.add_argument('--composition', help="Image composition method", type=case_insensitive_choices(composition_methods), required=True)
-    parser.add_argument('--environment', help="Environment type:(indoor or outdoor)", type=case_insensitive_choices(environment_types), default=EnvironmentType.Indoor.name)
+    parser.add_argument('--weights', help="Path to model weights", type=str, required=False)
 
     return parser.parse_args()
 
@@ -31,14 +30,15 @@ args = parse_args()
 
 detector_type = enum_from_string(args.mfinder, DetectorType)
 composition_type = enum_from_string(args.composition, ComposerType)
-environment_type = enum_from_string(args.environment, EnvironmentType)
+environment_type = EnvironmentType.Outdoor
+weights_path = args.weights if args.weights else None
 
 img1 = cv2.imread(args.img1_path)
 img2 = cv2.imread(args.img2_path)
 
 result_path = args.result_path
 
-stitcher = ImageStitcher(detector_type, composition_type, environment_type)
+stitcher = ImageStitcher(detector_type, composition_type, environment_type, weights_path)
 
 result = stitcher.stitch(img1, img2)
 
