@@ -6,7 +6,7 @@ channels:
   - nvidia
 dependencies:
   - python=3.12
-  - cudatoolkit=12.8
+  - cudatoolkit=12.6
   - pytorch
   - pip
   - pip:
