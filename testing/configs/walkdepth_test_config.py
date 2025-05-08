@@ -1,15 +1,15 @@
 from testing.configs.base import cfg
 
 
-TEST_BASE_PATH = r"C:\Users\pavlo.butenko\Downloads\dataset"
+TEST_BASE_PATH = r"datasets/WalkDepth"
 
 cfg.DATASET.TEST_DATA_SOURCE = "MegaDepth"
 cfg.DATASET.TEST_WALKDEPTH = True
 cfg.DATASET.TEST_DATA_ROOT = TEST_BASE_PATH
 cfg.DATASET.TEST_NPZ_ROOT = f"{TEST_BASE_PATH}"
 
-cfg.DATASET.TEST_LIST_PATH = fr"{TEST_BASE_PATH}/test_latest.txt"
-# cfg.DATASET.TEST_LIST_PATH = f"{TEST_BASE_PATH}/test.txt"
+# cfg.DATASET.TEST_LIST_PATH = fr"{TEST_BASE_PATH}/test_latest.txt"
+cfg.DATASET.TEST_LIST_PATH = f"{TEST_BASE_PATH}/test.txt"
 
 # cfg.DATASET.TEST_LIST_PATH = f"{TEST_BASE_PATH}/test_34.txt"
 # cfg.DATASET.TEST_LIST_PATH = f"{TEST_BASE_PATH}/test_23.txt"
