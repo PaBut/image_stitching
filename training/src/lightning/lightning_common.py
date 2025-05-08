@@ -24,9 +24,13 @@ def compute_step_metrics(batch, config):
         "R_errs": batch["R_errs"],
         "t_errs": batch["t_errs"],
         "inliers": batch["inliers"],
-        "elapsed_time": [batch["elapsed_time"]],
-        "match_count": [batch["mkpts0_f"].shape[0]]
     }
+
+    # Testing phase
+    if "elapsed_time" in batch:
+        metrics["elapsed_time"] = [batch["elapsed_time"]]
+        metrics["match_count"] = [batch["mkpts0_f"].shape[0]]
+
     for thr in homography_precision_thr:
         metrics[f"H_auc@{thr}px"] = [batch[f"H_auc@{thr}px"]]
     

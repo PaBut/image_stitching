@@ -32,4 +32,4 @@ python3 -u ./training/train.py \
     --num_sanity_val_steps=200 \
     --benchmark=True \
     --ckpt_path=${ckpt_path} \
-    --max_epochs=10 >> ./OUTPUT/AdaMatcher.txt
+    --max_epochs=10 >> ./training/OUTPUT/AdaMatcher.txt
