@@ -5,7 +5,7 @@ import pytorch_lightning as pl
 from loguru import logger as loguru_logger
 import torch
 
-from pipeline.Modules.tools.AdaMatcherUtils.config.default import get_cfg_defaults
+from training.src.config.default import get_cfg_defaults
 from training.src.lightning.data import MultiSceneDataModule
 from training.src.lightning.lightning_tester import PL_Tester
 from training.src.utils.profiler import build_profiler
