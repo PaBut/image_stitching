@@ -7,7 +7,7 @@ import torch
 
 from training.src.config.default import get_cfg_defaults
 from training.src.lightning.data import MultiSceneDataModule
-from training.src.lightning.lightning_tester import PL_Tester
+from testing.lightning.lightning_tester import PL_Tester
 from training.src.utils.profiler import build_profiler
 
 from pytorch_lightning.strategies import SingleDeviceStrategy

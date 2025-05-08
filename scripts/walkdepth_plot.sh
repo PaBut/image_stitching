@@ -14,7 +14,7 @@ figure_path=$4
 
 data_cfg_path="training/configs/data/walkdepth_test_.py"832
 
-CUDA_VISIBLE_DEVICES=0 python3 -u ./training/test_plot.py \
+CUDA_VISIBLE_DEVICES=0 python3 -u ./testing/test_plot.py \
     ${data_cfg_path} \
     --ckpt_path=${pretrained_model_path} \
     --model_type=${model_type} \

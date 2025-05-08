@@ -19,7 +19,7 @@ n_gpus_per_node=1 # -1
 torch_num_workers=8 # 4
 batch_size=1  # per gpu
 
-CUDA_VISIBLE_DEVICES=0 python3 -u ./training/test_lightning.py \
+CUDA_VISIBLE_DEVICES=0 python3 -u ./testing/test_lightning.py \
     ${data_cfg_path} \
     --ckpt_path=${pretrained_model_path} \
     --model_type=${model_type} \
