@@ -3,8 +3,10 @@
 SCRIPTPATH=$(dirname $(readlink -f "$0"))
 PROJECT_DIR="${SCRIPTPATH}/../"
 
+TRAINING_DIR="${PROJECT_DIR}/training"
+
 # conda activate adamatcher
-export PYTHONPATH=$PROJECT_DIR:$PYTHONPATH
+export PYTHONPATH=$PROJECT_DIR:$PYTHONPATH:$TRAINING_DIR
 cd $PROJECT_DIR
 
 model_type=$1
