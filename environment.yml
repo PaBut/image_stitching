@@ -1,6 +1,6 @@
 name: image_stitching
 channels:
-  - pytorch
+  # - pytorch
   - conda-forge
   - defaults
   - nvidia
