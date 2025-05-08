@@ -11,7 +11,7 @@ kornia==0.4.1
 loguru==0.5.3
 matplotlib
 opencv_python
-pytorch-lightning
+pytorch-lightning==2.5.1
 ray>=1.0.1
 tqdm
 typing-extensions==3.7.4
