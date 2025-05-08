@@ -17,3 +17,4 @@ tqdm
 typing-extensions
 yacs>=0.1.8
 gdown
+tensorboard
