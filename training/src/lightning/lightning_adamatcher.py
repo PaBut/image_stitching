@@ -212,7 +212,9 @@ class PL_AdaMatcher(pl.LightningModule):
         # if self.trainer.global_rank == 0 and self.global_step % self.trainer.log_every_n_steps == 0:
         #     for k, v in batch['loss_scalars'].items():
         #         self.log(k, v, prog_bar=True, logger=True, on_step=True, on_epoch=True)
-        ret_dict, _ = compute_step_metrics(batch)
+        with self.profiler.profile("Copmute metrics"):
+            ret_dict, _ = compute_step_metrics(batch, self.config)
+            
         if 0:
             bs = batch["image0"].shape[0]
             for b_id in range(bs):
@@ -480,7 +482,8 @@ class PL_AdaMatcher(pl.LightningModule):
         # if self.max_memory < tmp_gpu_use:
         #     self.max_memory = tmp_gpu_use
         # t1 = time.monotonic()
-        ret_dict, rel_pair_names = compute_step_metrics(batch)
+        with self.profiler.profile("Copmute metrics"):
+            ret_dict, rel_pair_names = compute_step_metrics(batch, self.config)
         # self.metric_time += time.monotonic() - t1
 
         with self.profiler.profile("dump_results"):

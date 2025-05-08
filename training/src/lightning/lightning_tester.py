@@ -57,20 +57,20 @@ class PL_Tester(pl.LightningModule):
         self.test_step_outputs = []
 
     def test_step(self, batch, batch_idx):
-        # with self.profiler.profile("AdaMatcher"):
+
         img0 = batch["image0"].permute(0, 2, 3, 1).cpu().numpy() * 255
         img1 = batch["image1"].permute(0, 2, 3, 1).cpu().numpy() * 255
         start = time.perf_counter()
         k1, k2 = self.matcher.find_matches(img0[0], img1[0])
         end = time.perf_counter()
         logger.info(f"keypoints shape: {k1.shape}, {k2.shape}")
-        batch["mkpts0_f"] = torch.from_numpy(k1).cuda().float()#.unsqueeze(0)
-        batch["mkpts1_f"] = torch.from_numpy(k2).cuda().float()#.unsqueeze(0)
+        batch["mkpts0_f"] = torch.from_numpy(k1).cuda().float()
+        batch["mkpts1_f"] = torch.from_numpy(k2).cuda().float()
         batch["m_bids"] = torch.zeros(k1.shape[0], dtype=torch.long)
         batch["elapsed_time"] = (end - start) * 1000
 
-        ret_dict, rel_pair_names = compute_step_metrics(batch)
-        # self.metric_time += time.monotonic() - t1
+        with self.profiler.profile("Compute metrics"):
+            ret_dict, rel_pair_names = compute_step_metrics(batch, self.config)
 
         with self.profiler.profile("dump_results"):
             if self.dump_dir is not None:
