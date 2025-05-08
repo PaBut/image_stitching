@@ -3,7 +3,7 @@ autopep8
 einops==0.3.0
 fairscale
 fvcore
-h5py==2.10.0
+h5py>=2.10.0
 ipython
 joblib>=1.0.1
 jupyterlab
