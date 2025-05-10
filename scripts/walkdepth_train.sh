@@ -16,7 +16,7 @@ n_gpus_per_node=1 # 1 4 8
 torch_num_workers=8 # 1 4 8
 batch_size=1
 pin_memory=true
-ckpt_path="training/weights/adamatcher.ckpt"
+ckpt_path="AdaMatcher/weights/adamatcher.ckpt"
 exp_name="AdaMatcher-${TRAIN_IMG_SIZE}-bs$(($n_gpus_per_node * $n_nodes * $batch_size))"
 
 python3 -u ./AdaMatcher/train.py \
