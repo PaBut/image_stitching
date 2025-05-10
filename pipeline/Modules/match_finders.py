@@ -20,33 +20,13 @@ class FeatureDetector(Enum):
     BRISK = 2
     AKAZE = 3
 
-class Matcher(Enum):
-    FLANN = 0
-    BF = 1
-
 class MatchFinder(ABC):
     @abstractmethod
     def find_matches(self, img1: Mat, img2: Mat) -> tuple[list[int], list[int]]:
         pass
 
-class FeatureDetectorMatchFinder(MatchFinder):
-    MIN_MATCH_COUNT = 4
-    def __get_flann_index_params(self, detector_type: FeatureDetector) -> dict:
-        # TODO: study the params
-        if detector_type == FeatureDetector.SIFT:
-            return dict(algorithm=1, trees=5)
-        else:
-            dict(algorithm=6, table_number=6, key_size=12, multi_probe_level=1)
-
-    def __get_bf_norm_type(self, detector_type: FeatureDetector):
-        if detector_type == FeatureDetector.SIFT:
-            return cv2.NORM_L2 # Euclidean distance
-        if detector_type == FeatureDetector.ORB:
-            return cv2.NORM_HAMMING2
-        else:
-            return cv2.NORM_HAMMING
-    
-    def __init__(self, detector_type: FeatureDetector, matcher_type: Matcher = Matcher.BF):
+class FeatureDetectorMatchFinder(MatchFinder):    
+    def __init__(self, detector_type: FeatureDetector):
         if detector_type == FeatureDetector.SIFT:
             self.detector = cv2.SIFT.create()
         elif detector_type == FeatureDetector.AKAZE:
@@ -56,17 +36,10 @@ class FeatureDetectorMatchFinder(MatchFinder):
         elif detector_type == FeatureDetector.ORB:
             self.detector = cv2.ORB.create()
         else:
-            raise Exception('Not supported')
+            raise Exception('Not supported handcrafted method')
 
-        if matcher_type == Matcher.FLANN:
-            search_params = dict(checks=50)
-            index_params = self.__get_flann_index_params(detector_type)
+        self.matcher = cv2.BFMatcher()
 
-            self.matcher = cv2.FlannBasedMatcher(index_params, search_params)
-        elif matcher_type == Matcher.BF:
-            self.matcher = cv2.BFMatcher()
-        else:
-            raise Exception('Not supported')
     def find_matches(self, img1, img2):
         img1 = img1.astype(np.uint8)
         img2 = img2.astype(np.uint8)

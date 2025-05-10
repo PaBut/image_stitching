@@ -2,39 +2,24 @@ from enum import Enum
 
 from cv2 import Mat
 
-from pipeline.enums import EnvironmentType
+from pipeline.enums import ComposerType, EnvironmentType, MatcherType
 from pipeline.Modules.match_finders import FeatureDetector
 from pipeline.Modules.warp_composer import DetectorFreeModel, DetectorFreeWarper, FeatureDetectorWarper, UDIS2Warper, Warper
 from pipeline.Modules.composition_module import AlphaCompositionModule, WeightedAlphaCompositionModule, CompositionModule, SimpleCompositionModule, UdisCompositionModule
 
-class DetectorType(Enum):
-    ORB = 0
-    SIFT = 1
-    BRISK = 2
-    AKAZE = 3
-    LoFTR = 4
-    AdaMatcher = 5
-    UDIS2 = 6
-
-class ComposerType(Enum):
-    Simple = 0
-    SimpleAlpha = 1
-    ComplexAlpha = 2
-    UDIS2 = 3
-
 class ImageStitcher:
     warper: Warper
     composer: CompositionModule
-    def __init__(self, detector_type: DetectorType, composer_type: ComposerType, weights_path: str | None = None, environment: EnvironmentType | None = None):
+    def __init__(self, matcher_type: MatcherType, composer_type: ComposerType, weights_path: str | None = None, environment: EnvironmentType | None = None):
 
-        if (detector_type == DetectorType.ORB or detector_type == DetectorType.AKAZE
-            or detector_type == DetectorType.SIFT or detector_type == DetectorType.BRISK):
-            self.warper = FeatureDetectorWarper(FeatureDetector[detector_type.name])
-        elif detector_type == DetectorType.LoFTR or detector_type == DetectorType.AdaMatcher:
-            if detector_type == DetectorType.LoFTR and environment == None:
-                raise Exception("Environment type msut be provided")
-            self.warper = DetectorFreeWarper(DetectorFreeModel[detector_type.name], environment, weights_path)
-        elif detector_type == DetectorType.UDIS2:
+        if (matcher_type == MatcherType.ORB or matcher_type == MatcherType.AKAZE
+            or matcher_type == MatcherType.SIFT or matcher_type == MatcherType.BRISK):
+            self.warper = FeatureDetectorWarper(FeatureDetector[matcher_type.name])
+        elif matcher_type == MatcherType.LoFTR or matcher_type == MatcherType.AdaMatcher:
+            if matcher_type == MatcherType.LoFTR and environment == None:
+                raise Exception("Environment type must be provided")
+            self.warper = DetectorFreeWarper(DetectorFreeModel[matcher_type.name], environment, weights_path)
+        elif matcher_type == MatcherType.UDIS2:
             self.warper = UDIS2Warper()
         else:
             raise Exception("Not supported")

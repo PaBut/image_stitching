@@ -17,7 +17,7 @@ from einops.einops import rearrange
 from loguru import logger
 
 from pipeline.enums import EnvironmentType
-from pipeline.Modules.match_finders import AdaMatcherMatchFinder, FeatureDetector, FeatureDetectorMatchFinder, LoFTRMatchFinder, Matcher
+from pipeline.Modules.match_finders import AdaMatcherMatchFinder, FeatureDetector, FeatureDetectorMatchFinder, LoFTRMatchFinder
 from training.src.lightning.lightning_common import compute_step_metrics
 from training.src.utils.metrics import aggregate_metrics
 from training.src.utils.misc import flattenList, lower_config

@@ -1,7 +1,7 @@
 import cv2
 from pipeline.common import enum_from_string
-from pipeline.enums import EnvironmentType
-from pipeline.image_stitcher import ComposerType, DetectorType, ImageStitcher
+from pipeline.enums import EnvironmentType, ComposerType, MatcherType
+from pipeline.image_stitcher import ImageStitcher
 import argparse
 
 def case_insensitive_choices(choices):
@@ -13,7 +13,7 @@ def case_insensitive_choices(choices):
     return validate
 
 def parse_args():
-    feature_finder_methods = [method.name.lower() for method in DetectorType]
+    feature_finder_methods = [method.name.lower() for method in MatcherType]
     composition_methods = [method.name.lower() for method in ComposerType]
     parser = argparse.ArgumentParser("Image stitcher with configurable methods")
     parser.add_argument('img1_path', type=str, help="Path to the first image")
@@ -28,7 +28,7 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
 
-    detector_type = enum_from_string(args.mfinder, DetectorType)
+    detector_type = enum_from_string(args.mfinder, MatcherType)
     composition_type = enum_from_string(args.composition, ComposerType)
     environment_type = EnvironmentType.Outdoor
     weights_path = args.weights if args.weights else None
