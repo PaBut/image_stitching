@@ -1,3 +1,5 @@
+# @Author: Pavlo Butenko
+
 from collections import defaultdict
 import os
 import numpy as np

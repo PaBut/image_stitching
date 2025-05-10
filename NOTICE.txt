@@ -1,0 +1,35 @@
+This package includes software licensed under the Apache License, Version 2.0.
+
+Modified Components
+(from "AdaMatcher" by Dihe Huang, Ying Chen, Yong Liu, Jianlin Liu, Shang Xu, Wenlong Wu, Yikang Ding, Fan Tang, Chengjie Wang, licensed under Apache License 2.0):
+
+- AdaMatcher/src/lightning/lightning_adamatcher.py
+  Modified by: Pavlo Butenko
+  Changes: Updated to latest pytorch_lightning version.
+
+- AdaMatcher/train.py
+  Modified by: Pavlo Butenko
+  Changes: Updated to latest pytorch_lightning version.
+
+- AdaMatcher/src/datasets/megadepth.py
+  Modified by: Pavlo Butenko
+  Changes: Added optional geometry augmentation.
+
+- AdaMatcher/src/utils/dataset.py
+  Modified by: Pavlo Butenko
+  Changes: Modified to read dataset-specific depth map files.
+
+- AdaMatcher/src/utils/metrics.py
+  Modified by: Pavlo Butenko
+  Changes: Added homography precision metric.
+
+- AdaMatcher/src/utils/augment.py
+  Modified by: Pavlo Butenko
+  Changes: Added augmentations simulating challenging conditions, such as noise, blur, rain, snow, low-light and lens obstruction.
+
+---
+
+Included But Unmodified Components:
+
+- "LoFTR" by Sun, Jiaming and Shen, Zehong and Wang, Yuang and Bao, Hujun and Zhou, Xiaowei (Apache 2.0)
+- "UDIS++" by Nie, Lang and Lin, Chunyu and Liao, Kang and Liu, Shuaicheng and Zhao, Yao (Apache 2.0)

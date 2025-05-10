@@ -1,3 +1,5 @@
+# @Author: Pavlo Butenko
+
 from cv2 import Mat
 import cv2
 import numpy as np

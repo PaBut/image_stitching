@@ -1,3 +1,5 @@
+# @Author: Pavlo Butenko
+
 from abc import ABC, abstractmethod
 from copy import deepcopy
 from enum import Enum

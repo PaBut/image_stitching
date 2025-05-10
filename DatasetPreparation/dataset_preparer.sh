@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# @Author: Pavlo Butenko
+
 if [ "$#" -ne 3 ]; then
     echo "Usage: $0 <scene_list.txt> <input_directory> <output_directory>"
     exit 1

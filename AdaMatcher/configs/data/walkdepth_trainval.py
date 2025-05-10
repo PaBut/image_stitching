@@ -1,6 +1,4 @@
-# from configs.data.base import cfg
-# -*- coding: utf-8 -*-
-# @Author  : xuelun
+# @Author: Pavlo Butenko
 
 from os.path import join
 from yacs.config import CfgNode as CN

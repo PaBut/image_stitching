@@ -1,3 +1,5 @@
+# @Author: Pavlo Butenko
+
 import glob
 import os
 from cv2 import Mat

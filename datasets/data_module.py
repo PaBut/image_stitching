@@ -1,3 +1,5 @@
+# @Author: Pavlo Butenko
+
 import os
 from abc import ABC, abstractmethod
 import random

@@ -1,3 +1,5 @@
+# @Author: Pavlo Butenko
+
 import cv2
 from pipeline.common import enum_from_string
 from pipeline.enums import EnvironmentType, ComposerType, MatcherType

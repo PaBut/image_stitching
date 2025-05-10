@@ -1,4 +1,4 @@
-from enum import Enum
+# @Author: Pavlo Butenko
 
 from cv2 import Mat
 

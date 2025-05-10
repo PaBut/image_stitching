@@ -1,3 +1,7 @@
+#!/bin/bash
+
+# @Author: Pavlo Butenko
+
 SCRIPTPATH=$(dirname $(readlink -f "$0"))
 PROJECT_DIR="${SCRIPTPATH}/../"
 

@@ -1,3 +1,5 @@
+# @Author: Pavlo Butenko
+
 from enum import Enum
 
 class MatcherType(Enum):

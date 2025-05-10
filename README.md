@@ -67,18 +67,17 @@ To enhance AdaMatcher’s robustness under challenging visual conditions, a fine
 sh scripts/walkdepth_train.sh
 ```
 
-In order to enable compatibility with the generated dataset and support newer CUDA environments, several components of the original AdaMatcher implementation were modified:
+In order to enable compatibility with the generated dataset and support newer CUDA environments, several components of the original AdaMatcher implementation were modified or added:
 
 - [AdaMatcher/src/lightning/lightning_adamatcher.py](AdaMatcher/src/lightning/lightning_adamatcher.py) - updated to a newer `pytorch_lightning` version;
 - [AdaMatcher/train.py](AdaMatcher/train.py) - updated to a newer `pytorch_lightning` version;
 - [AdaMatcher/src/datasets/megadepth.py](AdaMatcher/src/datasets/megadepth.py) - added optional geometry augmentation;
 - [AdaMatcher/src/utils/dataset.py](AdaMatcher/src/utils/dataset.py) - modified to read dataset-specific depth map files;
 - [AdaMatcher/src/utils/metrics.py](AdaMatcher/src/utils/dataset.py) - added homography precision metric;
+- [AdaMatcher/src/utils/augment.py](AdaMatcher/src/utils/augment.py) - added augmentations simulating challenging conditions, such as noise, blur, rain, snow, low-light and lens obstruction;
 - [AdaMatcher/configs/data/walkdepth_test.py](AdaMatcher/configs/data/walkdepth_test.py) - dataset config file for evaluation;
 - [AdaMatcher/configs/data/walkdepth_trainval.py](AdaMatcher/configs/data/walkdepth_trainval.py) - dataset config file for training;
-- [AdaMatcher/src/utils/augment.py](AdaMatcher/src/utils/augment.py) - added augmentations simulating challenging conditions, such as noise, blur, rain, snow, low-light and lens obstruction; 
-
-LoFTR and UDIS++ models are located under `models/`.
+- [AdaMatcher/configs/loftr/outdoor/loftr_ds_walkdepth.py](AdaMatcher/configs/loftr/outdoor/loftr_ds_walkdepth.py) - training config file;
 
 ## Project structure
 - `datasets/WalkDepth/` - Prosoposed dataset;
