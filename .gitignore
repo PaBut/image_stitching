@@ -1,10 +1,10 @@
-/datasets/*
+/datasets/**
 !/datasets/data_module.py
 /FirstMetricsResults
 /Experiment*
 *.pth
 *.ckpt
+!/weights/*.ckpt
 **/__pycache__/*
-*.png
 *.csv
 *.pyc
