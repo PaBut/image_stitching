@@ -6,10 +6,10 @@ import torch
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pipeline.common import prepare_image
 from pipeline.enums import EnvironmentType
-from pipeline.Modules.tools.AdaMatcherUtils.adamatcher.utils.cvpr_ds_config import lower_config
-from pipeline.Modules.tools.AdaMatcherUtils.adamatcher.adamatcher import AdaMatcher
-from pipeline.Modules.tools.AdaMatcherUtils.config.default import get_cfg_defaults
-from pipeline.Modules.tools.LoFTR import LoFTR, default_cfg
+from AdaMatcher.src.adamatcher.utils.cvpr_ds_config import lower_config
+from AdaMatcher.src.adamatcher.adamatcher import AdaMatcher
+from AdaMatcher.src.config.default import get_cfg_defaults
+from models.LoFTR import LoFTR, default_cfg
 
 import cv2
 import numpy as np
@@ -64,8 +64,8 @@ class FeatureDetectorMatchFinder(MatchFinder):
         
 
 class LoFTRMatchFinder(MatchFinder):
-    INDOOR_WEIGHTS_PATH = './pipeline/Modules/tools/LoFTR/weights/indoor_ds_new.ckpt'
-    OUTDOOR_WEIGHTS_PATH = './pipeline/Modules/tools/LoFTR/weights/outdoor_ds.ckpt'
+    INDOOR_WEIGHTS_PATH = './models/LoFTR/weights/indoor_ds_new.ckpt'
+    OUTDOOR_WEIGHTS_PATH = './models/LoFTR/weights/outdoor_ds.ckpt'
     FIXED_WIDTH = 640
     def __init__(self, loftr_type: EnvironmentType, pretrained_ckpt=None):
         _default_cfg = deepcopy(default_cfg)
@@ -113,7 +113,7 @@ class LoFTRMatchFinder(MatchFinder):
 class AdaMatcherMatchFinder(MatchFinder):
     FIXED_WIDTH = 640
     FIXED_DIVISION = 32
-    WEIGHTS_PATH = r'.\pipeline\Modules\tools\AdaMatcherUtils\weights\adamatcher.ckpt'
+    WEIGHTS_PATH = r'./AdaMatcher/weights/adamatcher.ckpt'
     def __init__(self, pretrained_ckpt=None):
         config = get_cfg_defaults()
         self.DF = config.DATASET.MGDPT_DF

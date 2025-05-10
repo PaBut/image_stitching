@@ -18,10 +18,10 @@ from loguru import logger
 
 from pipeline.enums import EnvironmentType
 from pipeline.Modules.match_finders import AdaMatcherMatchFinder, FeatureDetector, FeatureDetectorMatchFinder, LoFTRMatchFinder
-from training.src.lightning.lightning_common import compute_step_metrics
-from training.src.utils.metrics import aggregate_metrics
-from training.src.utils.misc import flattenList, lower_config
-from training.src.utils.profiler import PassThroughProfiler
+from AdaMatcher.src.lightning.lightning_common import compute_step_metrics
+from AdaMatcher.src.utils.metrics import aggregate_metrics
+from AdaMatcher.src.utils.misc import flattenList, lower_config
+from AdaMatcher.src.utils.profiler import PassThroughProfiler
 
 # from matplotlib import pyplot as plt
 

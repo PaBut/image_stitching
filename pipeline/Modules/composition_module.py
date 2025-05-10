@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 from abc import ABC, abstractmethod
 import torch
-from pipeline.Modules.tools.UDIS2.Composition.network import Network, build_model
+from models.UDIS2.Composition.network import Network, build_model
 
 class CompositionModule(ABC):
     @abstractmethod
@@ -23,7 +23,7 @@ def max(a, b):
     return b
 
 class UdisCompositionModule(CompositionModule):
-    MODEL_DIR = './pipeline/Modules/tools/UDIS2/Composition/model'
+    MODEL_DIR = './models/UDIS2/Composition/model'
     MIN_DIM_SIZE=408
     def preprocessData(self, src: Mat, dst: Mat, src_mask: Mat, dst_mask: Mat):
         warp1 = src.astype(dtype=np.float32)
