@@ -3,7 +3,7 @@
 SCRIPTPATH=$(dirname $(readlink -f "$0"))
 PROJECT_DIR="${SCRIPTPATH}/../"
 
-TRAINING_DIR="${PROJECT_DIR}/training"
+TRAINING_DIR="${PROJECT_DIR}/AdaMatcher"
 
 # conda activate adamatcher
 export PYTHONPATH=$PROJECT_DIR:$PYTHONPATH:$TRAINING_DIR
@@ -12,7 +12,7 @@ cd $PROJECT_DIR
 model_type=$1
 pretrained_model_path=$2
 
-data_cfg_path="training/configs/data/walkdepth_test_832.py"
+data_cfg_path="AdaMatcher/configs/data/walkdepth_test_832.py"
 
 dump_dir="dump/loftr_ds_outdoor"
 profiler_name="inference"
