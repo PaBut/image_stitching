@@ -7,10 +7,10 @@ import torch
 
 from pipeline.enums import EnvironmentType
 from pipeline.Modules.match_finders import AdaMatcherMatchFinder, FeatureDetector, FeatureDetectorMatchFinder, LoFTRMatchFinder
-from training.src.utils.metrics import compute_symmetrical_epipolar_errors
-from training.src.utils.plotting import make_matching_figures
-from pipeline.Modules.tools.AdaMatcherUtils.config.default import get_cfg_defaults
-from training.src.lightning.data import MultiSceneDataModule
+from AdaMatcher.src.utils.metrics import compute_symmetrical_epipolar_errors
+from AdaMatcher.src.utils.plotting import make_matching_figures
+from AdaMatcher.src.config.default import get_cfg_defaults
+from AdaMatcher.src.lightning.data import MultiSceneDataModule
 
 def parse_args():
     parser = argparse.ArgumentParser(

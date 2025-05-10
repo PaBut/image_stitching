@@ -13,13 +13,13 @@ from torch.utils.data import (ConcatDataset, DataLoader, Dataset,
 from torch.utils.data.dataset import Dataset
 from tqdm import tqdm
 
-from training.src.datasets.megadepth import MegaDepthDataset
-from training.src.datasets.sampler import RandomConcatSampler
-from training.src.datasets.scannet import ScanNetDataset
-from training.src.utils import comm
-from training.src.utils.augment import build_augmentor
-from training.src.utils.dataloader import get_local_split
-from training.src.utils.misc import tqdm_joblib
+from AdaMatcher.src.datasets.megadepth import MegaDepthDataset
+from AdaMatcher.src.datasets.sampler import RandomConcatSampler
+from AdaMatcher.src.datasets.scannet import ScanNetDataset
+from AdaMatcher.src.utils import comm
+from AdaMatcher.src.utils.augment import build_augmentor
+from AdaMatcher.src.utils.dataloader import get_local_split
+from AdaMatcher.src.utils.misc import tqdm_joblib
 
 
 class MultiSceneDataModule(pl.LightningDataModule):
