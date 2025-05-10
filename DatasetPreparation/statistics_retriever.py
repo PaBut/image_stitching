@@ -30,9 +30,9 @@ def process_file(filename, base_path, overlapping_ratio):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-    print(f"Image count: {img_count}")
-    print(f"Pair count: {pair_count}")
-    print(f"Valid pair count: {valid_pair_count}")
+    print(f"Total image count: {img_count}")
+    print(f"Total pair count: {pair_count}")
+    print(f"Total valid pair count: {valid_pair_count}")
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
