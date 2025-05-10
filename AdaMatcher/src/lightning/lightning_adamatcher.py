@@ -30,7 +30,7 @@ from src.utils.plotting import (  # make_matching_figure_color,; make_matching_i
     make_matching_mask,
 )
 from src.utils.profiler import PassThroughProfiler
-from lightning_common import compute_step_metrics
+from .lightning_common import compute_step_metrics
 
 # from matplotlib import pyplot as plt
 
