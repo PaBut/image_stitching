@@ -12,7 +12,7 @@ class MatcherType(Enum):
 class ComposerType(Enum):
     Simple = 0
     SimpleAlpha = 1
-    ComplexAlpha = 2
+    WeightedAlpha = 2
     UDIS2 = 3
 
 class EnvironmentType(Enum):

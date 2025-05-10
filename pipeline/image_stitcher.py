@@ -28,7 +28,7 @@ class ImageStitcher:
             self.composer = SimpleCompositionModule()
         elif composer_type == ComposerType.SimpleAlpha:
             self.composer = AlphaCompositionModule()
-        elif composer_type == ComposerType.ComplexAlpha:
+        elif composer_type == ComposerType.WeightedAlpha:
             self.composer = WeightedAlphaCompositionModule()
         elif composer_type == ComposerType.UDIS2:
             self.composer = UdisCompositionModule()
