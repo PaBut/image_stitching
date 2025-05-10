@@ -1,4 +1,4 @@
-from training.configs.data.base import cfg
+from AdaMatcher.configs.data.base import cfg
 
 
 TEST_BASE_PATH = r"datasets/WalkDepth"

@@ -25,12 +25,8 @@ class SingleWarpModule(WarpModule):
 
         corners2 = np.float32([[0, 0], [0, h2], [w2, h2], [w2, 0]]).reshape(-1, 1, 2)
 
-        # Warp the corner points using the homography matrix
         warped_corners = cv2.perspectiveTransform(corners2, H)
 
-        print(warped_corners)
-
-        # Combine the warped corners with image1's corners to get the full canvas extent
         all_corners = np.concatenate(([[[0, 0]], [[0, h1]], [[w1, h1]], [[w1, 0]]], warped_corners), axis=0)
 
         # Find the bounding box of the final stitched image
@@ -39,7 +35,7 @@ class SingleWarpModule(WarpModule):
 
         # Translate the homography to adjust for any negative coordinates
         translation_dist = [-x_min, -y_min]
-        # print(translation_dist)
+
         H_translation = np.array([[1, 0, translation_dist[0]], [0, 1, translation_dist[1]], [0, 0, 1]])
 
         dst = cv2.warpPerspective(img2, H_translation @ H, (x_max - x_min, y_max - y_min))
@@ -51,9 +47,6 @@ class SingleWarpModule(WarpModule):
 
         src = np.zeros(dst.shape, dst.dtype)
         src[int(translation_dist[1]):int(translation_dist[1] + h1), int(translation_dist[0]):int(translation_dist[0] + w1)] = img1
-
-        # print(img1.dtype)
-        # print(src.dtype)
 
         mask1 = np.copy(canvas)
         mask1[int(translation_dist[1]):int(translation_dist[1] + h1), int(translation_dist[0]):int(translation_dist[0] + w1)] = 255
