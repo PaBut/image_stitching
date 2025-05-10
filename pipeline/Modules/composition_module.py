@@ -23,7 +23,7 @@ def max(a, b):
     return b
 
 class UdisCompositionModule(CompositionModule):
-    MODEL_DIR = './tools/UDIS2/Composition/model'
+    MODEL_DIR = './pipeline/Modules/tools/UDIS2/Composition/model'
     MIN_DIM_SIZE=408
     def preprocessData(self, src: Mat, dst: Mat, src_mask: Mat, dst_mask: Mat):
         warp1 = src.astype(dtype=np.float32)

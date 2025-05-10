@@ -91,8 +91,8 @@ class FeatureDetectorMatchFinder(MatchFinder):
         
 
 class LoFTRMatchFinder(MatchFinder):
-    INDOOR_WEIGHTS_PATH = r'.\tools\LoFTR\weights\indoor_ds_new.ckpt'
-    OUTDOOR_WEIGHTS_PATH = r'.\tools\LoFTR\weights\outdoor_ds.ckpt'
+    INDOOR_WEIGHTS_PATH = './pipeline/Modules/tools/LoFTR/weights/indoor_ds_new.ckpt'
+    OUTDOOR_WEIGHTS_PATH = './pipeline/Modules/tools/LoFTR/weights/outdoor_ds.ckpt'
     FIXED_WIDTH = 640
     def __init__(self, loftr_type: EnvironmentType, pretrained_ckpt=None):
         _default_cfg = deepcopy(default_cfg)
@@ -140,7 +140,7 @@ class LoFTRMatchFinder(MatchFinder):
 class AdaMatcherMatchFinder(MatchFinder):
     FIXED_WIDTH = 640
     FIXED_DIVISION = 32
-    WEIGHTS_PATH = r'.\tools\AdaMatcherUtils\weights\adamatcher.ckpt'
+    WEIGHTS_PATH = r'.\pipeline\Modules\tools\AdaMatcherUtils\weights\adamatcher.ckpt'
     def __init__(self, pretrained_ckpt=None):
         config = get_cfg_defaults()
         self.DF = config.DATASET.MGDPT_DF
@@ -153,6 +153,9 @@ class AdaMatcherMatchFinder(MatchFinder):
         weights_path = self.WEIGHTS_PATH
         if pretrained_ckpt is not None:
             weights_path = pretrained_ckpt
+
+        torch.serialization.add_safe_globals([ModelCheckpoint])
+
         state_dict = torch.load(weights_path, weights_only=True)["state_dict"]
         
         new_state_dict = {}

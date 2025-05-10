@@ -3,9 +3,9 @@ from enum import Enum
 from cv2 import Mat
 
 from pipeline.enums import EnvironmentType
-from Modules.match_finders import FeatureDetector
-from Modules.warp_composer import DetectorFreeModel, DetectorFreeWarper, FeatureDetectorWarper, UDIS2Warper, Warper
-from Modules.composition_module import AlphaCompositionModule, WeightedAlphaCompositionModule, CompositionModule, SimpleCompositionModule, UdisCompositionModule
+from pipeline.Modules.match_finders import FeatureDetector
+from pipeline.Modules.warp_composer import DetectorFreeModel, DetectorFreeWarper, FeatureDetectorWarper, UDIS2Warper, Warper
+from pipeline.Modules.composition_module import AlphaCompositionModule, WeightedAlphaCompositionModule, CompositionModule, SimpleCompositionModule, UdisCompositionModule
 
 class DetectorType(Enum):
     ORB = 0

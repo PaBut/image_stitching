@@ -3,7 +3,6 @@ from enum import Enum
 import glob
 
 from cv2 import Mat
-import cv2
 import numpy as np
 import torch
 import torchvision.transforms as T
@@ -11,8 +10,8 @@ import torchvision.transforms as T
 resize_512 = T.Resize((512,512))
 
 from pipeline.enums import EnvironmentType
-from warp_module import SingleWarpModule, WarpModule
-from match_finders import AdaMatcherMatchFinder, FeatureDetector, FeatureDetectorMatchFinder, LoFTRMatchFinder, MatchFinder
+from pipeline.Modules.warp_module import SingleWarpModule, WarpModule
+from pipeline.Modules.match_finders import AdaMatcherMatchFinder, FeatureDetector, FeatureDetectorMatchFinder, LoFTRMatchFinder, MatchFinder
 from pipeline.Modules.tools.UDIS2.Warp.network import Network, build_new_ft_model, get_stitched_result
 
 class DetectorFreeModel(Enum):
@@ -28,7 +27,7 @@ class Warper(ABC):
         return self.warp_module.warp_images(img0, img1, keypoints1, keypoints2)
 
 class UDIS2Warper(Warper):
-    MODEL_DIR = './tools/UDIS2/Warp/model'
+    MODEL_DIR = './pipeline/Modules/tools/UDIS2/Warp/model'
     def __init__(self):
         super().__init__()
 

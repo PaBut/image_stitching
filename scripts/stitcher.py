@@ -25,25 +25,25 @@ def parse_args():
 
     return parser.parse_args()
 
+if __name__ == "__main__":
+    args = parse_args()
 
-args = parse_args()
+    detector_type = enum_from_string(args.mfinder, DetectorType)
+    composition_type = enum_from_string(args.composition, ComposerType)
+    environment_type = EnvironmentType.Outdoor
+    weights_path = args.weights if args.weights else None
 
-detector_type = enum_from_string(args.mfinder, DetectorType)
-composition_type = enum_from_string(args.composition, ComposerType)
-environment_type = EnvironmentType.Outdoor
-weights_path = args.weights if args.weights else None
+    img1 = cv2.imread(args.img1_path)
+    img2 = cv2.imread(args.img2_path)
 
-img1 = cv2.imread(args.img1_path)
-img2 = cv2.imread(args.img2_path)
+    result_path = args.result_path
 
-result_path = args.result_path
+    stitcher = ImageStitcher(detector_type, composition_type, weights_path, environment_type)
 
-stitcher = ImageStitcher(detector_type, composition_type, environment_type, weights_path)
+    result = stitcher.stitch(img1, img2)
 
-result = stitcher.stitch(img1, img2)
-
-if result == None:
-    print("Stitching process failed")
-    exit(1)
-result_img, _, _ = result
-cv2.imwrite(result_path, result_img)
+    if result == None:
+        print("Stitching process failed")
+        exit(1)
+    result_img, _, _ = result
+    cv2.imwrite(result_path, result_img)
