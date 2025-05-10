@@ -481,7 +481,7 @@ def aggregate_metrics(metrics, epi_err_thr=5e-4):
 
     aggregated_metrics = {**aucs, **precs, **homography_precision}
 
-    if "elsapsed_time" in metrics:
+    if "elapsed_time" in metrics:
         avg_elapsed_time = np.mean(metrics["elapsed_time"])
         avg_match_count = np.mean(metrics["match_count"])
 
