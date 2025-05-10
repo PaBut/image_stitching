@@ -7,8 +7,7 @@ PROJECT_DIR="${SCRIPTPATH}/../"
 export PYTHONPATH=$PROJECT_DIR:$PYTHONPATH
 cd $PROJECT_DIR
 
-TRAIN_IMG_SIZE=832
-data_cfg_path="AdaMatcher/configs/data/walkdepth_trainval_${TRAIN_IMG_SIZE}.py"
+data_cfg_path="AdaMatcher/configs/data/walkdepth_trainval.py"
 main_cfg_path="AdaMatcher/configs/loftr/outdoor/loftr_ds_walkdepth.py"
 
 n_nodes=1

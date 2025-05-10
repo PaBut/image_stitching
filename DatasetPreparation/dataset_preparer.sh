@@ -35,7 +35,6 @@ while IFS= read -r scene_name; do
                                 --cameras_path "$input_path/dense/sparse/txt/cameras.txt" \
                                 --images_path "$input_path/dense/sparse/txt/images.txt" \
                                 --points3D_path "$input_path/dense/sparse/txt/points3D.txt" 
-                                # --db_path "$input_path/sparse/database.db"
 
     fi
 done < "$scene_list"

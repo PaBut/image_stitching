@@ -12,7 +12,7 @@ cd $PROJECT_DIR
 model_type=$1
 pretrained_model_path=$2
 
-data_cfg_path="AdaMatcher/configs/data/walkdepth_test_832.py"
+data_cfg_path="AdaMatcher/configs/data/walkdepth_test.py"
 
 dump_dir="dump/loftr_ds_outdoor"
 profiler_name="inference"
