@@ -7,11 +7,33 @@ from abc import ABC, abstractmethod
 
 
 class WarpModule(ABC):
+    """
+    Abstract class for warping images based on keypoints.
+    """
     @abstractmethod
     def warp_images(self, img1: Mat, img2: Mat, keypoints1: np.array, keypoints2: np.array) -> tuple[Mat, Mat, Mat, Mat] | None:
+        """
+        Warps image pair to a shared pespective using matched keypoints.
+
+        Arguments:
+            img1: The reference image.
+            img2: The image to be warped.
+            keypoints1: Keypoints in img1.
+            keypoints2: Corresponding keypoints in img2.
+
+        Returns:
+            Tuple containing:
+                src: Canvas with img1 placed at its correct position.
+                dst: Canvas with img2 warped into the same space.
+                mask1: Binary mask indicating the region occupied by img1 on the canvas.
+                mask2: Binary mask indicating the region occupied by warped img2 on the canvas.
+        """
         pass
 
 class SingleWarpModule(WarpModule):
+    """
+    Class for warping image to the target image using keypoints.
+    """
     REQUIRED_KEYPOINTS_COUNT = 4
     def warp_images(self, img1, img2, keypoints1, keypoints2):
         if len(keypoints1) < self.REQUIRED_KEYPOINTS_COUNT:

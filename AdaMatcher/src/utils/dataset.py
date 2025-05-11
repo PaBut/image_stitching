@@ -204,7 +204,10 @@ def read_megadepth_color(path,
 
     return image, mask, scale, scale_wh
 
-def read_bin(path):
+def read_walkdepth_depthmap(path):
+    """
+    Reads WalkDepth dataset depth map binary file.
+    """
     with open(path, "rb") as fid:
         width, height, channels = np.genfromtxt(
             fid, delimiter="&", max_rows=1, usecols=(0, 1, 2), dtype=int
@@ -226,7 +229,7 @@ def read_megadepth_depth(path, pad_to=None, hflip=False, vflip=False):
     if str(path).endswith('.jpg'):
         depth = cv2.imread(path, 0)
     elif str(path).endswith('.bin'):
-        depth = read_bin(path)
+        depth = read_walkdepth_depthmap(path)
     elif str(path).startswith('s3://'):
         depth = load_array_from_s3(path, MEGADEPTH_CLIENT, None, use_h5py=True)
     else:

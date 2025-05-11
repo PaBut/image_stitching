@@ -10,8 +10,24 @@ import torch
 from models.UDIS2.Composition.network import Network, build_model
 
 class CompositionModule(ABC):
+    """
+    Abstract class for final image composition in image stitching pipeline.
+    """
     @abstractmethod
     def composite(self, src: Mat, src_mask: Mat, dst: Mat, dst_mask: Mat) -> tuple[Mat, Mat, Mat]:
+        """
+            Composes the final image using invidual images warps.
+
+            Arguments:
+                src: The first image warp to be composed.
+                src_mask: The mask of the first image warp.
+                dst: The second image warp to be composed.
+                dst_mask: The mask of the second image warp.
+
+            Returns:
+                A tuple containing the composited image, individual images warp masks indicating their influence 
+                over the resulting image.
+        """
         pass
 
 def min(a, b):
@@ -25,9 +41,15 @@ def max(a, b):
     return b
 
 class UdisCompositionModule(CompositionModule):
+    """
+    Class for final image composition using UDIS++ model.
+    """
     MODEL_DIR = './models/UDIS2/Composition/model'
     MIN_DIM_SIZE=408
     def preprocessData(self, src: Mat, dst: Mat, src_mask: Mat, dst_mask: Mat):
+        """
+        Preprocesses the input images and masks for the UDIS++ model.
+        """
         warp1 = src.astype(dtype=np.float32)
         warp1 = (warp1 / 127.5) - 1.0
         warp1 = np.transpose(warp1, [2, 0, 1])
@@ -55,7 +77,6 @@ class UdisCompositionModule(CompositionModule):
         os.environ['CUDA_DEVICES_ORDER'] = "PCI_BUS_ID"
         os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
-        # define the network
         net = Network()
         if torch.cuda.is_available():
             net = net.cuda()
@@ -80,7 +101,6 @@ class UdisCompositionModule(CompositionModule):
         resize_flag = min(h, w) < self.MIN_DIM_SIZE
 
         if resize_flag:
-            print('resized')
             resize = max(self.MIN_DIM_SIZE / w, self.MIN_DIM_SIZE / h)
 
             new_h, new_w = int(h * resize), int(w * resize)
@@ -89,7 +109,6 @@ class UdisCompositionModule(CompositionModule):
             src_mask_copy = cv2.resize(src_mask_copy, (new_w, new_h))
             dst_copy = cv2.resize(dst_copy, (new_w, new_h))
             dst_mask_copy = cv2.resize(dst_mask_copy, (new_w, new_h))
-            print(src_copy.shape)
 
         src_tensor, dst_tensor, src_mask_tensor, dst_mask_tensor = self.preprocessData(src_copy, dst_copy, src_mask_copy, dst_mask_copy)
         
@@ -119,6 +138,9 @@ class UdisCompositionModule(CompositionModule):
     
 
 class AlphaCompositionModule(CompositionModule):
+    """
+    Class for final image composition using constant alpha blending.
+    """
     def composite(self, src, src_mask, dst, dst_mask):
         common_area = cv2.bitwise_and(src_mask, dst_mask) / 2
 
@@ -134,6 +156,9 @@ class AlphaCompositionModule(CompositionModule):
         return blended, mask1, mask2
     
 class WeightedAlphaCompositionModule(CompositionModule):
+    """
+    Class for final image composition using weighted alpha blending.
+    """
     def composite(self, src, src_mask, dst, dst_mask):
         common_area = cv2.bitwise_and(src_mask, dst_mask)
 
@@ -144,7 +169,7 @@ class WeightedAlphaCompositionModule(CompositionModule):
 
         x, y = np.meshgrid(np.arange(src.shape[1]), np.arange(src.shape[0]))
         dist = np.sqrt((x - center[0])**2 + (y - center[1])**2)
-        max_dist = np.sqrt((w/2)**2 + (h/2)**2)  # Maximum distance from center
+        max_dist = np.sqrt((w/2)**2 + (h/2)**2)  # Maximal distance from center
         alpha_mask = np.expand_dims((1 - dist / max_dist), axis=-1)
 
         mask1 = src_mask - common_area + common_area * alpha_mask
@@ -158,6 +183,9 @@ class WeightedAlphaCompositionModule(CompositionModule):
         return blended, mask1, mask2
 
 class SimpleCompositionModule(CompositionModule):
+    """
+    Class for final image composition using image overlay.
+    """
     def composite(self, src, src_mask, dst, dst_mask):
         common_area = cv2.bitwise_and(src_mask, dst_mask)
 

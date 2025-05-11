@@ -17,18 +17,37 @@ import cv2
 import numpy as np
 
 class FeatureDetector(Enum):
+    """Handcrafted feature detectors."""
     ORB = 0
     SIFT = 1
     BRISK = 2
     AKAZE = 3
 
 class MatchFinder(ABC):
+    """Abstract class for matching keypoints between two images."""
     @abstractmethod
     def find_matches(self, img1: Mat, img2: Mat) -> tuple[list[int], list[int]]:
+        """
+            Finds matches between two images.
+
+            Arguments:
+                img1: The first image to match.
+                img2: The second image to match.
+
+            Returns:
+                A tuple containing keypoints in img1 and corresponding keypoints in img2.
+        """
         pass
 
-class FeatureDetectorMatchFinder(MatchFinder):    
+class FeatureDetectorMatchFinder(MatchFinder):  
+    """Class for matching keypoints based on handcrafted feature detectors."""  
     def __init__(self, detector_type: FeatureDetector):
+        """
+            FeatureDetectorMatchFinder constructor.
+
+            Arguments:
+                detector_type: The type of handcrafted feature detector to use.
+        """
         if detector_type == FeatureDetector.SIFT:
             self.detector = cv2.SIFT.create()
         elif detector_type == FeatureDetector.AKAZE:
@@ -66,10 +85,18 @@ class FeatureDetectorMatchFinder(MatchFinder):
         
 
 class LoFTRMatchFinder(MatchFinder):
+    """Class for finding feature matches using LoFTR model."""
     INDOOR_WEIGHTS_PATH = './models/LoFTR/weights/indoor_ds_new.ckpt'
     OUTDOOR_WEIGHTS_PATH = './models/LoFTR/weights/outdoor_ds.ckpt'
     FIXED_WIDTH = 640
     def __init__(self, loftr_type: EnvironmentType, pretrained_ckpt=None):
+        """
+            LoFTRMatchFinder constructor.
+
+            Arguments:
+                loftr_type: The type of environment (indoor or outdoor) for the LoFTR model.
+                pretrained_ckpt: Path to model weight.    
+        """
         _default_cfg = deepcopy(default_cfg)
         self.DF = _default_cfg['resolution'][0]
         
@@ -113,10 +140,17 @@ class LoFTRMatchFinder(MatchFinder):
         
 
 class AdaMatcherMatchFinder(MatchFinder):
+    """Class for finding feature matches using AdaMatcher model."""
     FIXED_WIDTH = 640
     FIXED_DIVISION = 32
     WEIGHTS_PATH = r'./AdaMatcher/weights/adamatcher.ckpt'
     def __init__(self, pretrained_ckpt=None):
+        """
+            AdaMatcherMatchFinder constructor.
+
+            Arguments:
+                pretrained_ckpt: Path to model weight.    
+        """
         config = get_cfg_defaults()
         self.DF = config.DATASET.MGDPT_DF
         _config = lower_config(config)
