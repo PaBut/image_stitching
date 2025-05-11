@@ -1,3 +1,5 @@
+# @Author: Pavlo Butenko
+
 from enum import Enum
 from typing import Type
 
