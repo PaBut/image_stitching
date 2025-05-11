@@ -46,9 +46,9 @@ class DataModule(ABC):
     
 class WalkDepthDataLoader(DataModule):
     """
-        Data module for the WalkDepth dataset.
+        Data module for the WalkDepth dataset made for visualization purposes.
     """
-    def __init__(self, data_root: str, scene_list, min_overlap_score: float = 0.2, max_overlap_score: float = 0.8):
+    def __init__(self, data_root: str, scene_list, min_overlap_score: float = 0.15, max_overlap_score: float = 1.0):
         """
         WalkDepthDataLoader constructor.
 
@@ -112,9 +112,9 @@ def read_depthmap(path: str) -> np.ndarray:
         
 class WalkDepthDataModule(DataModule):
     """
-    Data module for a single scene from the WalkDepth dataset.
+    Data module for a single scene from the WalkDepth dataset made for visualization purposes.
     """
-    def __init__(self, data_root: str, npz_path: str, min_overlap_score: float = 0.2, max_overlap_score: float = 0.8):
+    def __init__(self, data_root: str, npz_path: str, min_overlap_score: float = 0.15, max_overlap_score: float = 1.0):
         """
         WalkDepthDataModule constructor.
 
@@ -147,8 +147,6 @@ class WalkDepthDataModule(DataModule):
         img1 = cv2.imread(os.path.join(self.data_root, self.files[idx1]))
         img2 = cv2.imread(os.path.join(self.data_root, self.files[idx2]))
 
-        print(os.path.join(self.data_root, self.depth_maps[idx1]))
-        print(os.path.join(self.data_root, self.depth_maps[idx2]))
         T_0to1 = np.matmul(self.poses[idx2], np.linalg.inv(self.poses[idx2]))[:4, :4]
 
         return {
