@@ -25,8 +25,6 @@ A custom dataset was generated from sequnce of videos retrieved from [Content-Aw
 
 Dataset is present in ```datasets/WalkDepth``` directory. Notably, image pair and ground-truth records are stored in `.npz` files with a corresponding name to a scene. Sample image pairs are available in the `images/` directory and follow the naming convention `<pair_id>_pair_<1|2>`.png. 
 
-For visualization purposes a dedicated python notebook [notebooks/dataset.ipynb](notebooks/dataset.ipynb) was prepared to view dataset image pairs for training, validation and testing. 
-
 ## Usage
 
 ``` bash
