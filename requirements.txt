@@ -1,6 +1,6 @@
 albumentations --no-binary=imgaug,albumentations
 autopep8
-torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu128
+torchvision --index-url https://download.pytorch.org/whl/cu128
 einops==0.3.0
 fairscale
 fvcore
