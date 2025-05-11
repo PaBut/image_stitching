@@ -1,6 +1,6 @@
 albumentations --no-binary=imgaug,albumentations
 autopep8
-torchvision=0.21.0
+torchvision==0.21.0
 einops==0.3.0
 fairscale
 fvcore
