@@ -1,6 +1,7 @@
 # @Author: Pavlo Butenko
 
 from cv2 import Mat
+import numpy as np
 
 from pipeline.enums import ComposerType, EnvironmentType, MatcherType
 from pipeline.Modules.match_finders import FeatureDetector
@@ -66,4 +67,11 @@ class ImageStitcher:
             return None
         warp1, warp2, mask1, mask2 = warp_result
 
-        return self.composer.composite(warp1, mask1, warp2, mask2)
+        composition_result = self.composer.composite(warp1, mask1, warp2, mask2)
+        
+        if composition_result == None:
+            return None
+
+        result, result_mask1, result_mask2 = composition_result
+
+        return result.astype(dtype=np.uint8), result_mask1.astype(dtype=np.uint8), result_mask2.astype(dtype=np.uint8)
