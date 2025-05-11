@@ -27,6 +27,7 @@ class WarpModule(ABC):
                 dst: Canvas with img2 warped into the same space.
                 mask1: Binary mask indicating the region occupied by img1 on the canvas.
                 mask2: Binary mask indicating the region occupied by warped img2 on the canvas.
+            None if the process fails.
         """
         pass
 

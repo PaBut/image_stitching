@@ -3,6 +3,7 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 import glob
+import os
 
 from cv2 import Mat
 import numpy as np
@@ -43,6 +44,8 @@ class Warper(ABC):
                     dst: Canvas with img1 warped into the same space.
                     mask1: Binary mask indicating the region occupied by img0 on the canvas.
                     mask2: Binary mask indicating the region occupied by warped img1 on the canvas.
+
+                None if the process fails.
         """
         keypoints1, keypoints2 = self.matcher.find_matches(img0, img1)
 
@@ -52,7 +55,7 @@ class UDIS2Warper(Warper):
     """
     Class for warping images into shared perspective using the UDIS++ model.
     """
-    MODEL_DIR = './models/UDIS2/Warp/model'
+    MODEL_PATH = './models/UDIS2/Warp/model/epoch100_model.pth'
     def __init__(self):
         super().__init__()
 
@@ -73,20 +76,17 @@ class UDIS2Warper(Warper):
 
     def construct_warp(self, img0, img1):
         net = Network()
+
+        if os.path.exists(self.MODEL_PATH):
+            checkpoint = torch.load(self.MODEL_PATH)
+            net.load_state_dict(checkpoint['model'])
+        else:
+            print('No weights found for UDIS++ warping module!')
+            return None
+
         if torch.cuda.is_available():
             net = net.cuda()
 
-        ckpt_list = glob.glob(self.MODEL_DIR + "/*.pth")
-        ckpt_list.sort()
-        if len(ckpt_list) != 0:
-            model_path = ckpt_list[-1]
-            checkpoint = torch.load(model_path)
-            net.load_state_dict(checkpoint['model'])
-        else:
-            print('No checkpoint found!')
-            return
-
-        print(img0.shape, img1.shape)
         input1_tensor, input2_tensor = self.__loadSingleData(img0, img1)
         if torch.cuda.is_available():
             input1_tensor = input1_tensor.cuda()

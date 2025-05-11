@@ -21,7 +21,7 @@ class ImageStitcher:
         Arguments:
             matcher_type: The type of feature matcher to use (SIFT, LoFTR, AdaMatcher).
             composer_type: The composition strategy to use (Simple, SimpleAlpha, WeightedAlpha, UDIS2).
-            weights_path: Path to the weights file for the matcher model, if not specified default path is used.
+            weights_path: Path to the weights file for the feature matcher model, if not specified default path is used.
             environment: Environment type for the matcher (Applicable to LoFTR).
         """
         if (matcher_type == MatcherType.ORB or matcher_type == MatcherType.AKAZE
@@ -66,6 +66,4 @@ class ImageStitcher:
             return None
         warp1, warp2, mask1, mask2 = warp_result
 
-        result, result_mask1, result_mask2 = self.composer.composite(warp1, mask1, warp2, mask2)
-
-        return result, result_mask1, result_mask2
+        return self.composer.composite(warp1, mask1, warp2, mask2)

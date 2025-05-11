@@ -14,7 +14,7 @@ class CompositionModule(ABC):
     Abstract class for final image composition in image stitching pipeline.
     """
     @abstractmethod
-    def composite(self, src: Mat, src_mask: Mat, dst: Mat, dst_mask: Mat) -> tuple[Mat, Mat, Mat]:
+    def composite(self, src: Mat, src_mask: Mat, dst: Mat, dst_mask: Mat) -> tuple[Mat, Mat, Mat] | None:
         """
             Composes the final image using invidual images warps.
 
@@ -27,6 +27,7 @@ class CompositionModule(ABC):
             Returns:
                 A tuple containing the composited image, individual images warp masks indicating their influence 
                 over the resulting image.
+                None if the process fails.
         """
         pass
 
@@ -44,7 +45,7 @@ class UdisCompositionModule(CompositionModule):
     """
     Class for final image composition using UDIS++ model.
     """
-    MODEL_DIR = './models/UDIS2/Composition/model'
+    MODEL_DIR = './models/UDIS2/Composition/model/epoch050_model.pth'
     MIN_DIM_SIZE=408
     def preprocessData(self, src: Mat, dst: Mat, src_mask: Mat, dst_mask: Mat):
         """
@@ -74,23 +75,17 @@ class UdisCompositionModule(CompositionModule):
         return warp1_tensor, warp2_tensor, mask1_tensor, mask2_tensor
 
     def composite(self, src, src_mask, dst, dst_mask):
-        os.environ['CUDA_DEVICES_ORDER'] = "PCI_BUS_ID"
-        os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
         net = Network()
-        if torch.cuda.is_available():
-            net = net.cuda()
 
-        #load the existing models if it exists
-        ckpt_list = glob.glob(self.MODEL_DIR + "/*.pth")
-        ckpt_list.sort()
-        if len(ckpt_list) != 0:
-            model_path = ckpt_list[-1]
-            checkpoint = torch.load(model_path)
+        if os.path.exists(self.MODEL_DIR):
+            checkpoint = torch.load(self.MODEL_DIR)
             net.load_state_dict(checkpoint['model'])
         else:
-            print('No checkpoint found!')
-            return
+            print('No weights found for UDIS++ composition module!')
+            return None
+
+        if torch.cuda.is_available():
+            net = net.cuda()
         
         h, w, _ = src.shape
         src_copy = np.copy(src)
