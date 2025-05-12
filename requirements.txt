@@ -11,7 +11,7 @@ jupyterlab
 kornia==0.4.1
 loguru==0.5.3
 matplotlib
-opencv_python==4.11
+opencv_python==4.11.0.86
 pytorch-lightning==2.5.1
 ray>=1.0.1
 tqdm
