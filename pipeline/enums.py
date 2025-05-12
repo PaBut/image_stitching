@@ -14,7 +14,7 @@ class MatcherType(Enum):
 
 class ComposerType(Enum):
     """Composition strategies"""
-    Simple = 0
+    Overlay = 0
     SimpleAlpha = 1
     WeightedAlpha = 2
     UDIS2 = 3

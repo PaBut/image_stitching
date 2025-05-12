@@ -37,7 +37,7 @@ class ImageStitcher:
         else:
             raise Exception("Not supported")
         
-        if composer_type == ComposerType.Simple:
+        if composer_type == ComposerType.Overlay:
             self.composer = SimpleCompositionModule()
         elif composer_type == ComposerType.SimpleAlpha:
             self.composer = AlphaCompositionModule()
