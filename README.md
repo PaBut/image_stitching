@@ -59,7 +59,7 @@ Model weights are stored in the following directories:
 To visualize feature matches for a specific pair, highlighting valid and invalid correspondences based on epipolar precision threshold, run::
 
 ```bash
-sh walkdepth_plot <sift|loftr|adamatcher> <weights_path> <pair_index> <output_path>
+sh scripts/walkdepth_plot.sh <sift|loftr|adamatcher> <weights_path> <pair_index> <output_path>
 ```
 
 ## AdaMatcher Fine-tuning 
