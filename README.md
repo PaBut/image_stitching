@@ -51,6 +51,11 @@ sh scripts/walkdepth_test.sh <sift|loftr|adamatcher> <weights_path>
 ```
 *`weights_path` argument is ignored for sift option.
 
+Model weights are stored in the following directories:
+- `models/LoFTR/weights/outdoor_ds.ckpt` – LoFTR weights;
+- `AdaMatcher/weights/adamatcher.ckpt` – baseline AdaMatcher weights;
+- `weights/finetuned.ckpt` – fine-tuned AdaMatcher weights.
+
 To visualize feature matches for a specific pair, highlighting valid and invalid correspondences based on epipolar precision threshold, run::
 
 ```bash
